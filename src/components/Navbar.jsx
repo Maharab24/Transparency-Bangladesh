@@ -29,19 +29,13 @@ const Navbar = () => {
                 <NavLink to='/' className={({ isActive }) => isActive ? 'text-gray-800 px-4 py-2 font-bold  border-b-2 border-yellow-400' : 'font-semibold text-gray-700'}>Home</NavLink>
                 <NavLink to='/about' className={({ isActive }) => isActive ? 'text-gray-800 px-4 py-2 font-bold  border-b-2 border-yellow-400' : 'font-semibold text-gray-700'}>About</NavLink>
                 <NavLink to='/contact' className={({ isActive }) => isActive ? 'text-gray-800 px-4 py-2 font-bold  border-b-2 border-yellow-400 ' : 'font-semibold text-gray-700'}>Contact</NavLink>
-                <NavLink to='/login'
-                  className={({ isActive }) => isActive ? 'text-gray-800 px-4 py-2 font-bold rounded-lg border-b-2 border-yellow-400' : 'font-semibold text-gray-800 text-lg'}>
-                  Login</NavLink>
+
               </div>
             </ul>
           </div>
-          <div className="navbar-end lg:hidden">
-           <NavLink to='/login'
-                  className={({ isActive }) => isActive ? 'text-gray-800 px-4 py-2 font-bold rounded-lg border-b-2 border-yellow-400' : 'font-semibold text-gray-800'}>
-                  Login</NavLink>
-          </div>
+
         </div>
-  
+
       </div>
         </div>
     );

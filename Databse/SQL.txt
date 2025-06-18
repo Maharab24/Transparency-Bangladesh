@@ -1,0 +1,112 @@
+-- Create database
+CREATE DATABASE IF NOT EXISTS anticorruption;
+USE anticorruption;
+
+-- Roles table for RBAC
+CREATE TABLE roles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+INSERT INTO roles (name) VALUES ('admin'), ('user');
+
+-- Users table
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fullname VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Pivot table linking users to roles (many-to-many)
+CREATE TABLE user_role (
+    user_id INT,
+    role_id INT,
+    PRIMARY KEY (user_id, role_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
+);
+
+-- Corruption cases (admin-managed cases)
+CREATE TABLE corruption_cases (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    status VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Reports (submitted by users)
+CREATE TABLE reports (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    case_id INT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    location VARCHAR(255),
+    status VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (case_id) REFERENCES corruption_cases(id) ON DELETE SET NULL
+);
+
+-- Evidence (files/photos related to a case)
+CREATE TABLE evidence (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    case_id INT,
+    file_path VARCHAR(255),
+    description TEXT,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (case_id) REFERENCES corruption_cases(id) ON DELETE CASCADE
+);
+
+-- Notifications (e.g. system messages for users)
+CREATE TABLE notifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    message TEXT,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Informant rewards (e.g. user claims for a case)
+CREATE TABLE informant_rewards (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    case_id INT,
+    amount DECIMAL(10,2),
+    claimed_at TIMESTAMP,
+    status VARCHAR(50),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (case_id) REFERENCES corruption_cases(id) ON DELETE CASCADE
+);
+
+-- Educational content (articles, tips)
+CREATE TABLE education_content (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Heatmaps (location data, e.g. corruption hotspots)
+CREATE TABLE heatmaps (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255),
+    latitude DECIMAL(10,7),
+    longitude DECIMAL(10,7),
+    intensity INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Government spending projects (for tracking projects)
+CREATE TABLE spending_projects (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    project_name VARCHAR(255),
+    department VARCHAR(255),
+    budget DECIMAL(15,2),
+    start_date DATE,
+    end_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

@@ -1,11 +1,17 @@
 import { NavLink } from "react-router-dom";
 import logo from '../assets/images/logo.png';
+import About from "./home/About";
 
 
 const Navbar = () => {
-    return (
-        <div className="pb-36">
-            <div className="bg-[#f6824d] fixed z-10 w-full">
+
+  const handleAboutClick = ()=>{
+    const aboutSection = document.getElementById('about-section');
+    aboutSection.scrollIntoView({behavior:'smooth'});
+  }
+  return (
+    <div className="pb-36">
+      <div className="bg-[#f6824d] fixed z-10 w-full">
         <div className="navbar max-w-full mx-auto py-3 md:px-6 px-3">
           <div className="navbar-start">
             <div className="dropdown">
@@ -14,7 +20,7 @@ const Navbar = () => {
               </div>
               <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[15] p-2 shadow bg-base-100 rounded-box w-52">
                 <NavLink to='/' className={({ isActive }) => isActive ? 'text-[#33a954] px-4 py-2 font-bold rounded-lg ' : 'font-semibold text-gray-700'}>Home</NavLink>
-                <NavLink to='/about' className={({ isActive }) => isActive ? 'text-[#33a954] px-4 py-2 font-bold rounded-lg ' : 'font-semibold text-gray-700'}>About</NavLink>
+                <NavLink  onClick={handleAboutClick} className={({ isActive }) => isActive ? 'text-[#33a954] px-4 py-2 font-bold rounded-lg ' : 'font-semibold text-gray-700'}>About</NavLink>
                 <NavLink to='/contact' className={({ isActive }) => isActive ? 'text-[#33a954] px-4 py-2 font-bold rounded-lg ' : 'font-semibold text-gray-700'}>Contact</NavLink>
               </ul>
             </div>
@@ -27,7 +33,7 @@ const Navbar = () => {
             <ul className="menu menu-horizontal px-1">
               <div className="flex space-x-6 items-center">
                 <NavLink to='/' className={({ isActive }) => isActive ? 'text-gray-800 px-4 py-2 font-bold  border-b-2 border-yellow-400' : 'font-semibold text-gray-700'}>Home</NavLink>
-                <NavLink to='/about' className={({ isActive }) => isActive ? 'text-gray-800 px-4 py-2 font-bold  border-b-2 border-yellow-400' : 'font-semibold text-gray-700'}>About</NavLink>
+                <NavLink  onClick={handleAboutClick}  className={({ isActive }) => isActive ? 'text-gray-800 px-4 py-2 font-bold  border-b-2 border-yellow-400' : 'font-semibold text-gray-700'}>About</NavLink>
                 <NavLink to='/contact' className={({ isActive }) => isActive ? 'text-gray-800 px-4 py-2 font-bold  border-b-2 border-yellow-400 ' : 'font-semibold text-gray-700'}>Contact</NavLink>
 
               </div>
@@ -37,8 +43,8 @@ const Navbar = () => {
         </div>
 
       </div>
-        </div>
-    );
+    </div>
+  );
 };
 
 export default Navbar;

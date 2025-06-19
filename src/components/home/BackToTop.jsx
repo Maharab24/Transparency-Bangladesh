@@ -1,6 +1,6 @@
 // BackToTop.jsx
 import { useEffect, useState } from "react";
-import { FaArrowCircleUp } from "react-icons/fa";
+import { FaArrowUp } from "react-icons/fa";
 
 const BackToTop = () => {
   const [showButton, setShowButton] = useState(false);
@@ -24,7 +24,7 @@ const BackToTop = () => {
         className="fixed bottom-6 right-6 p-3 rounded-full bg-[#f6824d] text-white shadow-lg hover:bg-orange-600 z-50"
         aria-label="Back to top"
       >
-        <FaArrowCircleUp />
+        <FaArrowUp />
       </button>
     )
   );

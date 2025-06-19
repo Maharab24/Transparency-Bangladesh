@@ -9,6 +9,7 @@ import EducationHub from "../pages/EducationHub";
 import Reward from "../pages/Reward";
 import CaseTrack from "../pages/CaseTrack";
 import Form from "../pages/Form";
+import DetailedReport from "../components/govtSpending/DetailedReport";
 
 
 export const router = createBrowserRouter([
@@ -47,6 +48,10 @@ export const router = createBrowserRouter([
       {
         path: "/form",
         element: <Form></Form>,
+      },
+      {
+        path: "/DetailedReport",
+        element: <DetailedReport></DetailedReport>,
       },
     ]
   },

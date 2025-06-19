@@ -3,7 +3,9 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import BackToTop from "../components/home/BackToTop";
 
+
 const MainLayout = () => {
+
     return (
         <div>
             <div>

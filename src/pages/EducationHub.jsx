@@ -7,16 +7,15 @@ import Trainers from "../components/education/Trainers";
 const EducationHub = () => {
     return (
         <div>
-            <Banner></Banner>
-            <div>
-                <Icons></Icons>
-            </div>
-            <div>
-                <Trainers></Trainers>
-            </div>
-            <div className="my-20">
-              <About></About>
-            </div>
+<About></About>
+
+            <Icons></Icons>
+
+            <Trainers></Trainers>
+
+
+
+
         </div>
     );
 };

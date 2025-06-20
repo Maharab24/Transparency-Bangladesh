@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { FiUser, FiX, FiMenu } from "react-icons/fi";
 import logo from '../assets/images/logo.png';
 import { Link } from "react-router-dom";
+import LoginPage from "./login/LoginPage";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -81,7 +82,7 @@ const Navbar = () => {
               </NavLink>
 
               <NavLink
-                to='/login'
+                to='/LoginPage'
                 className="flex items-center px-4 py-2 bg-[#33a954] text-white rounded-full hover:bg-[#2a8d45] transition-all duration-300 shadow-md hover:shadow-lg"
               >
                 <FiUser className="mr-2" />
@@ -169,7 +170,7 @@ const Navbar = () => {
               </NavLink>
 
               <NavLink
-                to='/login'
+                to='/LoginPage'
                 className="mt-8 flex items-center px-6 py-3 bg-[#33a954] text-white text-xl rounded-full hover:bg-[#2a8d45] transition-all duration-300"
                 onClick={() => setIsMenuOpen(false)}
               >

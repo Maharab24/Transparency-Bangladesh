@@ -11,6 +11,7 @@ import CaseTrack from "../pages/CaseTrack";
 import Form from "../pages/Form";
 import DetailedReport from "../components/govtSpending/DetailedReport";
 import AboutUs from "../components/home/AboutUs";
+import LoginPage from "../components/login/LoginPage";
 
 export const router = createBrowserRouter([
   {
@@ -56,6 +57,10 @@ export const router = createBrowserRouter([
       {
         path: "/AboutUs",
         element: <AboutUs></AboutUs>,
+      },
+      {
+        path: "/LoginPage",
+        element: <LoginPage></LoginPage>,
       },
 
 

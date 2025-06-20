@@ -2,25 +2,13 @@ import { NavLink } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { FiUser, FiX, FiMenu } from "react-icons/fi";
 import logo from '../assets/images/logo.png';
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const handleAboutClick = () => {
-    setIsMenuOpen(false);
-    const aboutSection = document.getElementById('about-section');
-    if (aboutSection) {
-      // Calculate position considering navbar height
-      const navbarHeight = document.querySelector('nav')?.offsetHeight || 0;
-      const offsetPosition = aboutSection.offsetTop - navbarHeight;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
-  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -69,14 +57,15 @@ const Navbar = () => {
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#33a954] transition-all duration-300 group-hover:w-full"></span>
               </NavLink>
 
+              <Link to="/AboutUs">
               <button
-                onClick={handleAboutClick}
+
                 className={`relative px-1 py-2 font-medium transition-all duration-300 ${
                   scrolled ? 'text-gray-700 hover:text-[#f6824d]' : 'text-white hover:text-[#33a954]'
                 }`}
               >
                 About
-              </button>
+              </button></Link>
 
               <NavLink
                 to='/contact'
@@ -157,15 +146,15 @@ const Navbar = () => {
                 Home
               </NavLink>
 
+              <Link to="/AboutUs">
               <button
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  setTimeout(handleAboutClick, 300);
-                }}
-                className="text-2xl font-medium px-4 py-2 text-gray-700"
+
+                className={`relative px-1 py-2 font-medium transition-all duration-300 ${
+                  scrolled ? 'text-gray-700 hover:text-[#f6824d]' : 'text-white hover:text-[#33a954]'
+                }`}
               >
                 About
-              </button>
+              </button></Link>
 
               <NavLink
                 to='/contact'

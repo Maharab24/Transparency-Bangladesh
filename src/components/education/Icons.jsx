@@ -46,7 +46,7 @@ const Icons = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Training Session */}
           <Link
-            to="/training"
+            to="/TrainingSession"
             className="group relative block overflow-hidden rounded-3xl bg-white shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
             onMouseEnter={() => setHovered(1)}
             onMouseLeave={() => setHovered(null)}
@@ -68,11 +68,11 @@ const Icons = () => {
               </p>
 
               <div className="mt-auto flex justify-center">
-                <Link to="/TrainingSession">
+
                 <button className="bg-gradient-to-r from-orange-400 to-orange-600 text-white px-6 py-2 rounded-full font-medium transition-all duration-300 transform group-hover:scale-105 group-hover:shadow-lg">
                   Learn More
                   <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
-                </button></Link>
+                </button>
               </div>
             </div>
 
@@ -83,7 +83,7 @@ const Icons = () => {
 
           {/* Law for Corruption */}
           <Link
-            to="/law"
+            to="/AntiCorruptionLaws"
             className="group relative block overflow-hidden rounded-3xl bg-white shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
             onMouseEnter={() => setHovered(2)}
             onMouseLeave={() => setHovered(null)}

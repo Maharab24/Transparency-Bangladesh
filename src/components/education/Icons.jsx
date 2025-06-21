@@ -68,10 +68,11 @@ const Icons = () => {
               </p>
 
               <div className="mt-auto flex justify-center">
+                <Link to="/TrainingSession">
                 <button className="bg-gradient-to-r from-orange-400 to-orange-600 text-white px-6 py-2 rounded-full font-medium transition-all duration-300 transform group-hover:scale-105 group-hover:shadow-lg">
                   Learn More
                   <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
-                </button>
+                </button></Link>
               </div>
             </div>
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, useAnimation, useInView } from 'framer-motion';
 
+
 const About = () => {
   const controls = useAnimation();
   const ref = useRef(null);
@@ -57,15 +58,12 @@ const About = () => {
               />
               <div className="relative overflow-hidden rounded-3xl shadow-2xl">
                 <motion.div
-                  className="w-full h-80 bg-gradient-to-br from-orange-200 to-amber-300 flex items-center justify-center"
+                  className="w-full h-90 bg-gradient-to-br from-orange-200 to-amber-300 flex items-center justify-center"
                   whileHover={{ scale: 1.03 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <div className="text-center p-6">
-                    <div className="text-5xl mb-4">🇧🇩</div>
-                    <h2 className="text-2xl font-bold text-orange-800">Anti-Corruption Initiative</h2>
-                    <p className="text-orange-700 mt-2">Transparency Bangladesh</p>
-                  </div>
+                  {/* set the image here */}
+                  <img src="src\assets\images\EduBanner.png" alt="" />
                 </motion.div>
               </div>
             </div>

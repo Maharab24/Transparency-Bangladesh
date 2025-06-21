@@ -29,6 +29,7 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             {/* Logo */}
+            <Link to="/">
             <div className="flex items-center">
               <img
                 className="w-10 h-10 md:w-14 md:h-14 transition-all duration-300"
@@ -41,6 +42,7 @@ const Navbar = () => {
                 Transparency Bangladesh
               </span>
             </div>
+            </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
@@ -134,13 +136,11 @@ const Navbar = () => {
               </button>
             </div>
 
-            <div className="flex flex-col items-center justify-center flex-grow space-y-10">
+            <div className="flex flex-col items-center justify-center flex-grow space-y-5">
               <NavLink
                 to='/'
-                className={({ isActive }) =>
-                  `text-2xl font-medium px-4 py-2 transition-all ${
-                    isActive ? 'text-[#33a954] font-bold' : 'text-gray-700'
-                  }`
+                className={
+                  `text-2xl font-medium px-4 py-2 transition-all text-black`
                 }
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -150,19 +150,15 @@ const Navbar = () => {
               <Link to="/AboutUs">
               <button
 
-                className={`relative px-1 py-2 font-medium transition-all duration-300 ${
-                  scrolled ? 'text-gray-700 hover:text-[#f6824d]' : 'text-white hover:text-[#33a954]'
-                }`}
+                className={`text-2xl px-1 py-2 font-medium transition-all duration-300 text-black`}
               >
                 About
               </button></Link>
 
               <NavLink
                 to='/contact'
-                className={({ isActive }) =>
-                  `text-2xl font-medium px-4 py-2 transition-all ${
-                    isActive ? 'text-[#33a954] font-bold' : 'text-gray-700'
-                  }`
+                className={
+                  `text-2xl font-medium px-4 py-2 transition-all $`
                 }
                 onClick={() => setIsMenuOpen(false)}
               >

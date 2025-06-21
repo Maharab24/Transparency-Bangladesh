@@ -12,6 +12,7 @@ import Form from "../pages/Form";
 import DetailedReport from "../components/govtSpending/DetailedReport";
 import AboutUs from "../components/home/AboutUs";
 import LoginPage from "../components/login/LoginPage";
+import IDRegistrationForm from "../components/login/IDRegistrationForm ";
 
 export const router = createBrowserRouter([
   {
@@ -61,6 +62,10 @@ export const router = createBrowserRouter([
       {
         path: "/LoginPage",
         element: <LoginPage></LoginPage>,
+      },
+      {
+        path: "/IDRegistrationForm",
+        element: <IDRegistrationForm ></IDRegistrationForm >,
       },
 
 

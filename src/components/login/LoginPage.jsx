@@ -1,25 +1,73 @@
 // src/components/LoginPage.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const LoginPage = () => {
-  const [showLoginForm, setShowLoginForm] = useState(false);
-  const [activeTab, setActiveTab] = useState('user');
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const [showUserLogin, setShowUserLogin] = useState(false);
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [phoneError, setPhoneError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // Here you would typically handle login logic
-    alert(`Login attempt as ${activeTab}: ${phone}`);
+
+    // Reset errors
+    setPhoneError('');
+    setPasswordError('');
+
+    // Validate phone number
+    if (!phone) {
+      setPhoneError('Phone number is required');
+      return;
+    }
+
+    if (!/^\d{11}$/.test(phone)) {
+      setPhoneError('Phone number must be exactly 11 digits');
+      return;
+    }
+
+    // Validate password
+    if (!password) {
+      setPasswordError('Password is required');
+      return;
+    }
+
+    if (password.length < 6) {
+      setPasswordError('Password must be at least 6 characters');
+      return;
+    }
+
+    // If validation passes, proceed with login
+    const loginType = showUserLogin ? 'user' : 'admin';
+    alert(`Login attempt as ${loginType}: ${phone}`);
   };
 
-  const toggleForm = () => {
-    setShowLoginForm(!showLoginForm);
+  const toggleUserLogin = () => {
+    setShowUserLogin(true);
+    setShowAdminLogin(false);
+    setPhoneError('');
+    setPasswordError('');
   };
 
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
+  const toggleAdminLogin = () => {
+    setShowAdminLogin(true);
+    setShowUserLogin(false);
+    setPhoneError('');
+    setPasswordError('');
+  };
+
+  const goBack = () => {
+    setShowUserLogin(false);
+    setShowAdminLogin(false);
+    setPhoneError('');
+    setPasswordError('');
   };
 
   // Custom SVG icons with the new primary color
@@ -42,13 +90,13 @@ const LoginPage = () => {
   );
 
   const LoginIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="#f6824d">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="white">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
     </svg>
   );
 
-  const UserPlusIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="#f6824d">
+  const UserPlusIcon = ({ className = "" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${className}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
     </svg>
   );
@@ -76,96 +124,69 @@ const LoginPage = () => {
       <div className="max-w-4xl w-full">
         <div className="flex flex-col md:flex-row rounded-2xl shadow-2xl overflow-hidden bg-white">
           {/* Left Side - Branding & Info */}
-          <div className="w-full md:w-2/5 bg-gradient-to-br from-[#f6824d] to-[#e05a2a] text-white p-8 flex flex-col">
+          <div className="w-full md:w-2/5 bg-gradient-to-br from-[#f6824d] to-[#e05a2a] text-white p-8 flex flex-col justify-center">
             <div className="mb-12">
               <div className="flex items-center gap-3 mb-4">
                 <div className="bg-white p-3 rounded-xl">
                   <ShieldIcon />
                 </div>
-                <h1 className="text-3xl font-bold">SecurePortal</h1>
+                <h1 className="text-3xl font-bold">Secure Login Portal</h1>
               </div>
               <p className="text-[#ffd8c5]">Enterprise-grade security for your digital assets</p>
             </div>
 
-            <div className="mt-auto">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="bg-[#ff9d6d]/20 p-3 rounded-xl">
-                  <LockIcon />
-                </div>
-                <div>
-                  <h3 className="font-bold">End-to-end encryption</h3>
-                  <p className="text-[#ffd8c5] text-sm">All data is encrypted in transit and at rest</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="bg-[#ff9d6d]/20 p-3 rounded-xl">
-                  <FingerprintIcon />
-                </div>
-                <div>
-                  <h3 className="font-bold">Biometric authentication</h3>
-                  <p className="text-[#ffd8c5] text-sm">Support for fingerprint and facial recognition</p>
-                </div>
-              </div>
-            </div>
+            
           </div>
 
           {/* Right Side - Login Form */}
           <div className="w-full md:w-3/5 p-8">
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h2>
-            <p className="text-gray-600 mb-8">Sign in to access your account</p>
-
             {/* Initial View - Login/Signup Buttons */}
-            {!showLoginForm ? (
-              <div className="space-y-6">
-                <button
-                  onClick={toggleForm}
-                  className="btn w-full text-lg bg-[#f6824d] border-[#f6824d] hover:bg-[#e05a2a] text-white"
-                >
-                  <LoginIcon className="mr-2 inline-block" />
-                  Login to your account
-                </button>
+            {!showUserLogin && !showAdminLogin ? (
+              <div>
+                <h2 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h2>
+                <p className="text-gray-600 mb-8">Sign in to access your account</p>
 
-                <div className="divider text-gray-400">OR</div>
-
-                <div>
-                  <p className="text-gray-600 text-center mb-4">Don't have an account yet?</p>
-                  <button className="btn btn-outline w-full text-lg border-[#f6824d] text-[#f6824d] hover:bg-[#f6824d] hover:text-white">
-                    <UserPlusIcon className="mr-2 inline-block" />
-                    Create new account
-                  </button>
-                </div>
-
-                <div className="text-center mt-8">
+                <div className="space-y-6">
                   <button
-                    onClick={() => {
-                      setActiveTab('admin');
-                      setShowLoginForm(true);
-                    }}
-                    className="btn btn-ghost text-[#f6824d] hover:bg-[#fff5f0]"
+                    onClick={toggleUserLogin}
+                    className="btn w-full text-lg bg-gradient-to-r from-[#f6824d] to-[#e05a2a] hover:from-[#e05a2a] hover:to-[#c54a1a] text-white transition-all duration-300 transform hover:scale-[1.02]"
                   >
-                    <AdminIcon className="mr-2 inline-block" />
-                    Admin Login
+                    <LoginIcon className="mr-2 inline-block" />
+                    Login to your account
                   </button>
+
+                  <div className="divider text-gray-400">OR</div>
+
+                  <div>
+                    <p className="text-gray-600 text-center mb-4">Don't have an account yet?</p>
+                    <Link to="/IDRegistrationForm">
+                      <button className="btn btn-outline w-full text-lg border-[#f6824d] text-[#f6824d] hover:bg-[#f6824d] hover:text-white transition-colors duration-300">
+                        <UserPlusIcon className="mr-2 inline-block" />
+                        Create new account
+                      </button>
+                    </Link>
+                  </div>
+
+                  <div className="text-center mt-8">
+                    <button
+                      onClick={toggleAdminLogin}
+                      className="btn btn-ghost text-[#f6824d] hover:bg-[#fff5f0]"
+                    >
+                      <AdminIcon className="mr-2 inline-block" />
+                      Admin Login
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
-              /* Login Form - Now with Phone Number */
+              /* Login Form */
               <div>
-                <div className="tabs mb-6">
-                  <button
-                    className={`tab tab-bordered text-lg font-medium ${activeTab === 'user' ? 'tab-active border-[#f6824d] text-[#f6824d]' : ''}`}
-                    onClick={() => handleTabChange('user')}
-                  >
-                    User
-                  </button>
-                  <button
-                    className={`tab tab-bordered text-lg font-medium ${activeTab === 'admin' ? 'tab-active border-[#f6824d] text-[#f6824d]' : ''}`}
-                    onClick={() => handleTabChange('admin')}
-                  >
-                    Admin
-                  </button>
-                </div>
+                <h2 className="text-3xl font-bold text-gray-800 mb-2">
+                  {showUserLogin ? 'User Login' : 'Admin Login'}
+                </h2>
+                <p className="text-gray-600 mb-8">
+                  Sign in to your {showUserLogin ? 'user' : 'admin'} account
+                </p>
 
                 <form onSubmit={handleLogin}>
                   <div className="form-control mb-4">
@@ -178,17 +199,26 @@ const LoginPage = () => {
                       </span>
                       <input
                         type="tel"
-                        placeholder="+1 (555) 123-4567"
-                        className="input input-bordered w-full pl-10 text-lg py-4"
+                        placeholder="01XXXXXXXXX"
+                        className={`input input-bordered w-full pl-10 text-lg py-4 ${phoneError ? 'border-red-500' : ''}`}
                         required
                         value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                        onChange={(e) => {
+                          // Only allow numbers and limit to 11 digits
+                          const value = e.target.value.replace(/\D/g, '').slice(0, 11);
+                          setPhone(value);
+                          if (phoneError) setPhoneError('');
+                        }}
                       />
                     </div>
-                    <label className="label">
-                      <span className="label-text-alt text-gray-500">Format: 123-456-7890</span>
-                    </label>
+                    {phoneError && (
+                      <div className="mt-2 text-red-500 text-sm flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {phoneError}
+                      </div>
+                    )}
                   </div>
 
                   <div className="form-control mb-6">
@@ -202,12 +232,23 @@ const LoginPage = () => {
                       <input
                         type="password"
                         placeholder="••••••••"
-                        className="input input-bordered w-full pl-10 text-lg py-4"
+                        className={`input input-bordered w-full pl-10 text-lg py-4 ${passwordError ? 'border-red-500' : ''}`}
                         required
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => {
+                          setPassword(e.target.value);
+                          if (passwordError) setPasswordError('');
+                        }}
                       />
                     </div>
+                    {passwordError && (
+                      <div className="mt-2 text-red-500 text-sm flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {passwordError}
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex justify-between items-center mb-6">
@@ -224,14 +265,17 @@ const LoginPage = () => {
                     <a href="#" className="text-[#f6824d] hover:underline">Forgot password?</a>
                   </div>
 
-                  <button type="submit" className="btn w-full text-lg py-4 bg-[#f6824d] border-[#f6824d] hover:bg-[#e05a2a] text-white">
+                  <button
+                    type="submit"
+                    className="btn w-full text-lg py-4 bg-gradient-to-r from-[#f6824d] to-[#e05a2a] border-[#f6824d] hover:from-[#e05a2a] hover:to-[#c54a1a] text-white transition-all duration-300 transform hover:scale-[1.02]"
+                  >
                     Sign In
                   </button>
                 </form>
 
                 <div className="text-center mt-6">
                   <button
-                    onClick={toggleForm}
+                    onClick={goBack}
                     className="btn btn-ghost text-[#f6824d] hover:bg-[#fff5f0]"
                   >
                     <BackIcon className="mr-2 inline-block" />
@@ -244,11 +288,11 @@ const LoginPage = () => {
         </div>
 
         <div className="text-center mt-8 text-gray-600">
-          <p>© 2023 SecurePortal. All rights reserved.</p>
+          <p className="text-sm">© 2025 Transparency Bangladesh. All rights reserved.</p>
           <div className="mt-2 space-x-4">
-            <a href="#" className="hover:text-[#f6824d]">Privacy Policy</a>
-            <a href="#" className="hover:text-[#f6824d]">Terms of Service</a>
-            <a href="#" className="hover:text-[#f6824d]">Contact Support</a>
+            <a href="#" className="hover:text-[#f6824d] text-sm">Privacy Policy</a>
+            <a href="#" className="hover:text-[#f6824d] text-sm">Terms of Service</a>
+            <a href="#" className="hover:text-[#f6824d] text-sm">Contact Support</a>
           </div>
         </div>
       </div>

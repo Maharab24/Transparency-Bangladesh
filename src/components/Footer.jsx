@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logo from '../assets/images/logo.png';
+
 
 const Footer = () => {
     return (
@@ -9,12 +11,8 @@ const Footer = () => {
                     {/* Organization Info */}
                     <div className="space-y-6">
                         <div className="flex items-center">
-                            <div className="bg-white p-2 rounded-lg mr-3">
-                                <div className="w-10 h-10 bg-gradient-to-r from-[#f6824d] to-[#e05a2a] rounded-md flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                    </svg>
-                                </div>
+                            <div className=" p-2 rounded-lg mr-3">
+                               <img src={logo} alt="Transparency Bangladesh" className="w-12 h-12 object-contain" />
                             </div>
                             <h2 className="text-2xl font-bold bg-gradient-to-r from-[#f6824d] to-[#e05a2a] bg-clip-text text-transparent">
                                 Transparency Bangladesh
@@ -23,6 +21,11 @@ const Footer = () => {
                         <p className="text-gray-300 leading-relaxed">
                             Fighting corruption through transparency, accountability, and citizen empowerment. Join us in building a corruption-free Bangladesh.
                         </p>
+                        <Link to="/AboutUs" >
+                        <button className="px-3 py-2 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg transition-colors duration-300 shadow-md hover:shadow-lg mt-5">
+                            About Us
+                        </button>
+                    </Link>
                         <div className="flex space-x-4">
                             <a href="#" className="bg-[#1e3a5f] hover:bg-[#f6824d] rounded-full p-2 transition duration-300">
                                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -151,19 +154,7 @@ const Footer = () => {
                                 <span className="text-gray-300">Monday - Friday: 9:00 AM - 5:00 PM</span>
                             </li>
                         </ul>
-                        <div className="mt-6">
-                            <h4 className="text-gray-300 font-medium mb-3">Subscribe to Our Newsletter</h4>
-                            <div className="flex">
-                                <input
-                                    type="email"
-                                    placeholder="Your email address"
-                                    className="px-4 py-2 rounded-l-lg focus:outline-none w-full text-gray-800"
-                                />
-                                <button className="bg-[#f6824d] hover:bg-[#e05a2a] text-white px-4 py-2 rounded-r-lg transition duration-300">
-                                    Subscribe
-                                </button>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
 

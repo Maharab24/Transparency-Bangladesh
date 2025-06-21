@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Accordion = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -108,9 +109,10 @@ const Accordion = () => {
             <h3 className="text-xl font-bold text-orange-800 mb-2">Still have questions?</h3>
             <p className="text-orange-700">Contact our support team for more information</p>
           </div>
+          <Link to="/ContactPage">
           <button className="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg transition-colors duration-300 shadow-md hover:shadow-lg">
             Contact Support
-          </button>
+          </button></Link>
         </div>
       </div>
     </div>

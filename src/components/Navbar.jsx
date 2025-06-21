@@ -71,7 +71,7 @@ const Navbar = () => {
               </button></Link>
 
               <NavLink
-                to='/contact'
+                to='/ContactPage'
                 className={({ isActive }) =>
                   `relative px-1 py-2 font-medium transition-all duration-300 ${
                     isActive
@@ -156,7 +156,7 @@ const Navbar = () => {
               </button></Link>
 
               <NavLink
-                to='/contact'
+                to='/ContactPage'
                 className={
                   `text-2xl font-medium px-4 py-2 transition-all $`
                 }

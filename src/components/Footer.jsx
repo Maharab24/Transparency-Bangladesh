@@ -126,14 +126,17 @@ const Footer = () => {
 
                     {/* Contact */}
                     <div>
-                        <h3 className="text-lg font-semibold mb-6 border-l-4 border-[#f6824d] pl-3">Contact Us</h3>
+                        <Link to="/ContactPage">
+                        <h3 className="text-lg font-semibold mb-6 border-l-4 border-[#f6824d] pl-3">Contact Us</h3></Link>
                         <ul className="space-y-4">
                             <li className="flex items-start">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#f6824d] mt-0.5 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
-                                <span className="text-gray-300">123 Integrity Road, Transparency Tower, Dhaka 1212, Bangladesh</span>
+                                <span className="text-gray-300">Asfia Tower, Road no 11
+Banani, Dhaka 1212
+Bangladesh</span>
                             </li>
                             <li className="flex items-start">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#f6824d] mt-0.5 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -151,7 +154,7 @@ const Footer = () => {
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#f6824d] mt-0.5 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                <span className="text-gray-300">Monday - Friday: 9:00 AM - 5:00 PM</span>
+                                <span className="text-gray-300">Sunday to Thursday: 9:00 AM - 5:00 PM</span>
                             </li>
                         </ul>
 

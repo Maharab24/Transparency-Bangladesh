@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const AntiCorruptionLaws = () => {
+      useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-orange-50 font-sans">
       {/* Header */}
@@ -264,7 +267,7 @@ const AntiCorruptionLaws = () => {
               </svg>
             </div>
             <div>
-              <h2 className="text-2xl font-bold mb-3">Conclusion</h2>
+              {/* <h2 className="text-2xl font-bold mb-3">Conclusion</h2> */}
               <p className="text-orange-100">
                 Bangladesh has established a comprehensive legal framework through legislation like the Penal Code (1860), Prevention of Corruption Act (1947), ACC Act (2004), and MLP Act (2012). While institutions like the Anti-Corruption Commission demonstrate commitment to combating corruption, challenges remain in enforcement due to political interference, resource constraints, and systemic vulnerabilities in key sectors. Continuous reforms and strengthening of institutions are crucial for effective implementation of anti-corruption measures.
               </p>
@@ -273,7 +276,7 @@ const AntiCorruptionLaws = () => {
         </div>
       </main>
 
-     
+
 
     </div>
   );

@@ -1,10 +1,13 @@
 // src/components/training/TrainingSession.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaChalkboardTeacher, FaCertificate, FaBuilding, FaUserGraduate, FaClock, FaUsers, FaStar, FaRegCheckCircle, FaMedal } from 'react-icons/fa';
 import { BsFillPatchCheckFill } from 'react-icons/bs';
 
 const TrainingSession = () => {
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
   const [activeTab, setActiveTab] = useState('all');
 
   // Sample data for courses

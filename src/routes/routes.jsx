@@ -16,6 +16,8 @@ import IDRegistrationForm from "../components/login/IDRegistrationForm ";
 import ContactPage from "../components/ContactPage";
 import TrainingSession from "../components/education/TrainingSession";
 import AntiCorruptionLaws from "../components/education/AntiCorruptionLaws";
+import AntiCorruptionEvents from "../components/education/AntiCorruptionEvents";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -80,6 +82,10 @@ export const router = createBrowserRouter([
        {
         path: "/AntiCorruptionLaws",
         element: <AntiCorruptionLaws></AntiCorruptionLaws>,
+      },
+       {
+        path: "/AntiCorruptionEvents",
+        element: <AntiCorruptionEvents></AntiCorruptionEvents>,
       },
 
 

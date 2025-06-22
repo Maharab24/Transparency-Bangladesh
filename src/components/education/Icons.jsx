@@ -119,7 +119,7 @@ const Icons = () => {
 
           {/* Anti-Corruption Events */}
           <Link
-            to="/events"
+            to="/AntiCorruptionEvents"
             className="group relative block overflow-hidden rounded-3xl bg-white shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
             onMouseEnter={() => setHovered(3)}
             onMouseLeave={() => setHovered(null)}

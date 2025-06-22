@@ -234,7 +234,7 @@ const AntiCorruptionLaws = () => {
                 </div>
               </div>
             </div>
-
+      {/* update */}
             {/* Notable Cases */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h2 className="text-2xl font-bold text-orange-700 mb-4 pb-2 border-b-2 border-orange-300">Notable Cases & Impact</h2>

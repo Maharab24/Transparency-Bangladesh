@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FiSend, FiUser, FiFileText, FiCreditCard, FiPhone, FiChevronDown, FiEyeOff, FiAward } from 'react-icons/fi';
+import { FiSend, FiUser, FiFileText, FiCreditCard, FiPhone, FiChevronDown, FiEyeOff, FiAward, FiMapPin, FiPaperclip, FiX } from 'react-icons/fi';
 
 const ReportingTool = () => {
   const [problemType, setProblemType] = useState('');
@@ -7,10 +7,13 @@ const ReportingTool = () => {
   const [name, setName] = useState('');
   const [nid, setNid] = useState('');
   const [phone, setPhone] = useState('');
+  const [division, setDivision] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [showRewardInfo, setShowRewardInfo] = useState(false);
+  const [showFileUpload, setShowFileUpload] = useState(false); // New state for file upload visibility
+  const [files, setFiles] = useState([]); // New state for uploaded files
 
   const problemTypes = [
     'Bribery',
@@ -20,6 +23,18 @@ const ReportingTool = () => {
     'Abuse of Power',
     'Procurement Corruption',
     'Other'
+  ];
+
+  // Bangladesh divisions
+  const divisions = [
+    'Dhaka',
+    'Chittagong',
+    'Rajshahi',
+    'Khulna',
+    'Barishal',
+    'Sylhet',
+    'Rangpur',
+    'Mymensingh'
   ];
 
   const handleSubmit = (e) => {
@@ -38,26 +53,41 @@ const ReportingTool = () => {
         setName('');
         setNid('');
         setPhone('');
+        setDivision('');
+        setFiles([]); // Reset files
         setIsSubmitted(false);
         setIsAnonymous(false);
+        setShowFileUpload(false); // Hide file upload section
       }, 4000);
     }, 1500);
   };
 
-    useEffect(() => {
+  useEffect(() => {
     // Initialize scroll position
-    window.scrollTo(0, 0)},[])
+    window.scrollTo(0, 0)
+  }, [])
 
   const handleAnonymousToggle = () => {
     setIsAnonymous(!isAnonymous);
-
 
     // Clear personal info when switching to anonymous
     if (!isAnonymous) {
       setName('');
       setNid('');
       setPhone('');
+      setDivision('');
     }
+  };
+
+  // Handle file selection
+  const handleFileChange = (e) => {
+    const newFiles = Array.from(e.target.files);
+    setFiles([...files, ...newFiles]);
+  };
+
+  // Remove a file
+  const removeFile = (fileName) => {
+    setFiles(files.filter(file => file.name !== fileName));
   };
 
   if (isSubmitted) {
@@ -142,6 +172,67 @@ const ReportingTool = () => {
                 <FiFileText />
               </div>
             </div>
+          </div>
+
+          {/* NEW: File Upload Section */}
+          <div className="mb-8">
+            <button
+              type="button"
+              onClick={() => setShowFileUpload(!showFileUpload)}
+              className="flex items-center text-orange-600 font-medium mb-3"
+            >
+              <FiPaperclip className="mr-2" />
+              {showFileUpload ? 'Hide File Upload' : 'Attach Files (Optional)'}
+            </button>
+
+            {showFileUpload && (
+              <div className="border border-gray-200 rounded-xl p-4 bg-gray-50">
+                <div className="mb-4">
+                  <label className="block text-gray-700 font-medium mb-2">
+                    Upload supporting documents
+                  </label>
+                  <p className="text-sm text-gray-500 mb-3">
+                    Photos, documents, or other evidence (PDF, JPG, PNG - Max 5MB each)
+                  </p>
+                  <div className="relative">
+                    <input
+                      type="file"
+                      multiple
+                      onChange={handleFileChange}
+                      className="w-full opacity-0 absolute inset-0 cursor-pointer"
+                    />
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-white">
+                      <FiPaperclip className="mx-auto text-gray-400 text-2xl mb-2" />
+                      <p className="text-gray-600 font-medium">Click to browse or drag files here</p>
+                      <p className="text-sm text-gray-500 mt-1">Max 5 files allowed</p>
+                    </div>
+                  </div>
+                </div>
+
+                {files.length > 0 && (
+                  <div className="mt-4">
+                    <h3 className="text-gray-700 font-medium mb-2">Selected files:</h3>
+                    <div className="space-y-2">
+                      {files.map((file, index) => (
+                        <div key={index} className="flex items-center justify-between bg-white p-3 rounded-lg border border-gray-200">
+                          <div className="flex items-center truncate">
+                            <FiPaperclip className="text-gray-500 mr-2 flex-shrink-0" />
+                            <span className="truncate">{file.name}</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeFile(file.name)}
+                            className="text-gray-500 hover:text-red-500 ml-2"
+                          >
+                            <FiX />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Anonymous Option */}
@@ -254,7 +345,7 @@ const ReportingTool = () => {
                 </div>
 
                 {/* Phone Number */}
-                <div className="md:col-span-2">
+                <div>
                   <label className="block text-gray-700 font-medium mb-3">Phone Number</label>
                   <div className="relative">
                     <input
@@ -267,6 +358,27 @@ const ReportingTool = () => {
                     />
                     <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
                       <FiPhone />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Division */}
+                <div>
+                  <label className="block text-gray-700 font-medium mb-3">Division</label>
+                  <div className="relative">
+                    <select
+                      value={division}
+                      onChange={(e) => setDivision(e.target.value)}
+                      className="w-full p-4 pl-12 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-300 appearance-none"
+                      required={!isAnonymous}
+                    >
+                      <option value="" disabled>Select your division</option>
+                      {divisions.map((div, index) => (
+                        <option key={index} value={div}>{div}</option>
+                      ))}
+                    </select>
+                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                      <FiMapPin />
                     </div>
                   </div>
                 </div>

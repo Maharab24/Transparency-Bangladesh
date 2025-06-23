@@ -8,11 +8,25 @@ const IDRegistrationForm = () => {
     nid: '',
     dob: '',
     phone: '',
-    address: ''
+    address: '',
+    division: '' // Added division field
   });
 
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Bangladesh divisions
+  const divisions = [
+    'Select your division',
+    'Dhaka',
+    'Chittagong',
+    'Rajshahi',
+    'Khulna',
+    'Barishal',
+    'Sylhet',
+    'Rangpur',
+    'Mymensingh'
+  ];
 
   useEffect(() => {
     if (isSubmitted) {
@@ -78,6 +92,11 @@ const IDRegistrationForm = () => {
       newErrors.address = 'Address is too short';
     }
 
+    // Validate division
+    if (!formData.division || formData.division === 'Select your division') {
+      newErrors.division = 'Please select your division';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -97,7 +116,8 @@ const IDRegistrationForm = () => {
       nid: '',
       dob: '',
       phone: '',
-      address: ''
+      address: '',
+      division: '' // Reset division
     });
     setErrors({});
     setIsSubmitted(false);
@@ -106,7 +126,7 @@ const IDRegistrationForm = () => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4"
          style={{
-           
+          
            backgroundSize: '400% 400%',
            animation: 'gradientBG 15s ease infinite'
          }}>
@@ -294,6 +314,41 @@ const IDRegistrationForm = () => {
                   placeholder="Enter your current address"
                   rows="4"
                 ></textarea>
+              </div>
+            </div>
+
+            {/* NEW: Division Dropdown */}
+            <div className="mb-6">
+              <label className="block text-gray-700 font-medium mb-2 flex items-center">
+                <span>Division</span>
+                <span className="text-red-500 ml-1">*</span>
+                {errors.division && <span className="ml-2 text-red-500 text-sm font-normal">{errors.division}</span>}
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+                <select
+                  name="division"
+                  value={formData.division}
+                  onChange={handleChange}
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg input-field appearance-none ${
+                    errors.division ? 'border-red-500' : 'border-gray-300'
+                  } focus:outline-none focus:ring-2 focus:ring-[#f6824d] bg-white`}
+                >
+                  {divisions.map((division, index) => (
+                    <option key={index} value={division}>
+                      {division}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                  <svg className="w-4 h-4 fill-current text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                  </svg>
+                </div>
               </div>
             </div>
 

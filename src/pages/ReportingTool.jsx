@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { FiSend, FiUser, FiFileText, FiCreditCard, FiPhone, FiChevronDown, FiEyeOff, FiAward, FiMapPin, FiPaperclip, FiX } from 'react-icons/fi';
 
 const ReportingTool = () => {
+  useEffect(() => {
+    // Initialize scroll position
+    window.scrollTo(0, 0);
+  }, []);
   const [problemType, setProblemType] = useState('');
   const [description, setDescription] = useState('');
   const [name, setName] = useState('');
@@ -391,11 +395,10 @@ const ReportingTool = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`px-8 py-4 rounded-xl font-bold text-white flex items-center transition-all duration-300 transform hover:scale-105 ${
-                isSubmitting
+              className={`px-8 py-4 rounded-xl font-bold text-white flex items-center transition-all duration-300 transform hover:scale-105 ${isSubmitting
                   ? 'bg-gray-400 cursor-not-allowed'
                   : 'bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 shadow-lg'
-              }`}
+                }`}
             >
               {isSubmitting ? (
                 <>

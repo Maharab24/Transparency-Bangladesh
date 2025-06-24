@@ -1,12 +1,21 @@
 import { useState, useRef } from 'react';
-import { UploadCloud, X, AlertCircle } from 'lucide-react';
+import { UploadCloud, X, AlertCircle, CheckCircle } from 'lucide-react';
+import jsPDF from 'jspdf';
 
 const CorruptionReportForm = () => {
+  // State declarations
   const [files, setFiles] = useState([]);
   const [dragging, setDragging] = useState(false);
-  const fileInputRef = useRef(null);
   const [witnesses, setWitnesses] = useState([{ name: '', contact: '' }]);
+  const [submitted, setSubmitted] = useState(false);
+  const [referenceNumber, setReferenceNumber] = useState('');
+  const [formData, setFormData] = useState(null); // Store form data for PDF generation
 
+  // Ref declarations
+  const fileInputRef = useRef(null);
+  const formRef = useRef(null);
+
+  // File handling functions
   const handleFileChange = (e) => {
     const newFiles = Array.from(e.target.files);
     setFiles([...files, ...newFiles]);
@@ -38,6 +47,7 @@ const CorruptionReportForm = () => {
     fileInputRef.current.click();
   };
 
+  // Witness handling functions
   const addWitness = () => {
     setWitnesses([...witnesses, { name: '', contact: '' }]);
   };
@@ -48,6 +58,235 @@ const CorruptionReportForm = () => {
     setWitnesses(newWitnesses);
   };
 
+  // Form submission handler
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Generate reference number (ACC-YYYYMMDD-RANDOM)
+    const now = new Date();
+    const datePart = now.toISOString().slice(0, 10).replace(/-/g, '');
+    const randomPart = Math.floor(1000 + Math.random() * 9000);
+    const refNum = `ACC-${datePart}-${randomPart}`;
+
+    // Capture form data before showing success screen
+    const formElements = formRef.current.elements;
+    const capturedData = {
+      fullName: formElements.fullName?.value || '',
+      nid: formElements.nid?.value || '',
+      mobile: formElements.mobile?.value || '',
+      email: formElements.email?.value || '',
+      profession: formElements.profession?.value || '',
+      address: formElements.address?.value || '',
+      accusedName: formElements.accusedName?.value || '',
+      accusedPosition: formElements.accusedPosition?.value || '',
+      accusedOffice: formElements.accusedOffice?.value || '',
+      accusedAddress: formElements.accusedAddress?.value || '',
+      incidentDate: formElements.incidentDate?.value || '',
+      incidentTime: formElements.incidentTime?.value || '',
+      incidentLocation: formElements.incidentLocation?.value || '',
+      corruptionType: formElements.corruptionType?.value || '',
+      amount: formElements.amount?.value || '',
+      description: formElements.description?.value || '',
+    };
+
+    setFormData(capturedData);
+    setReferenceNumber(refNum);
+    setSubmitted(true);
+  };
+
+  // PDF generation function
+  const generatePDF = () => {
+    if (!formData) return;
+
+    const pdf = new jsPDF();
+
+    // Add logo and header
+    pdf.setFontSize(18);
+    pdf.setTextColor(0, 0, 0);
+    pdf.text('Anti-Corruption Commission', 105, 20, null, null, 'center');
+    pdf.setFontSize(14);
+    pdf.setTextColor(120, 53, 15);
+    pdf.text('Corruption Report Summary', 105, 30, null, null, 'center');
+
+    // Reference number
+    pdf.setFontSize(12);
+    pdf.setTextColor(0, 0, 0);
+    pdf.text(`Reference Number: ${referenceNumber}`, 20, 45);
+    pdf.text(`Date: ${new Date().toLocaleDateString()}`, 20, 55);
+
+    let yPosition = 65;
+
+    // Complainant Information
+    pdf.setFontSize(14);
+    pdf.setTextColor(120, 53, 15);
+    pdf.text('Complainant Information', 20, yPosition);
+    yPosition += 10;
+
+    const fields = [
+      { label: 'Full Name', value: formData.fullName },
+      { label: 'NID Number', value: formData.nid },
+      { label: 'Mobile', value: formData.mobile },
+      { label: 'Email', value: formData.email },
+      { label: 'Profession', value: formData.profession },
+      { label: 'Address', value: formData.address },
+    ];
+
+    fields.forEach(field => {
+      pdf.setFontSize(12);
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(`${field.label}: ${field.value || 'N/A'}`, 25, yPosition);
+      yPosition += 8;
+    });
+
+    yPosition += 5;
+
+    // Accused Information
+    pdf.setFontSize(14);
+    pdf.setTextColor(120, 53, 15);
+    pdf.text('Accused Information', 20, yPosition);
+    yPosition += 10;
+
+    const accusedFields = [
+      { label: 'Name/Organization', value: formData.accusedName },
+      { label: 'Position', value: formData.accusedPosition },
+      { label: 'Office/Department', value: formData.accusedOffice },
+      { label: 'Address', value: formData.accusedAddress },
+    ];
+
+    accusedFields.forEach(field => {
+      pdf.setFontSize(12);
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(`${field.label}: ${field.value || 'N/A'}`, 25, yPosition);
+      yPosition += 8;
+    });
+
+    yPosition += 5;
+
+    // Incident Details
+    pdf.setFontSize(14);
+    pdf.setTextColor(120, 53, 15);
+    pdf.text('Incident Details', 20, yPosition);
+    yPosition += 10;
+
+    const incidentFields = [
+      { label: 'Date', value: formData.incidentDate },
+      { label: 'Time', value: formData.incidentTime },
+      { label: 'Location', value: formData.incidentLocation },
+      { label: 'Corruption Type', value: formData.corruptionType },
+      { label: 'Amount Involved', value: formData.amount ? `BDT ${formData.amount}` : 'N/A' },
+    ];
+
+    incidentFields.forEach(field => {
+      pdf.setFontSize(12);
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(`${field.label}: ${field.value || 'N/A'}`, 25, yPosition);
+      yPosition += 8;
+    });
+
+    // Description
+    const description = formData.description || 'No description provided';
+    const splitDescription = pdf.splitTextToSize(description, 170);
+    pdf.text('Description:', 25, yPosition);
+    yPosition += 8;
+    splitDescription.forEach(line => {
+      if (yPosition > 280) {
+        pdf.addPage();
+        yPosition = 20;
+      }
+      pdf.text(line, 30, yPosition);
+      yPosition += 8;
+    });
+
+    yPosition += 5;
+
+    // Witnesses
+    if (witnesses.some(w => w.name || w.contact)) {
+      if (yPosition > 250) {
+        pdf.addPage();
+        yPosition = 20;
+      }
+
+      pdf.setFontSize(14);
+      pdf.setTextColor(120, 53, 15);
+      pdf.text('Witness Information', 20, yPosition);
+      yPosition += 10;
+
+      witnesses.forEach((witness, index) => {
+        if (witness.name || witness.contact) {
+          if (yPosition > 250) {
+            pdf.addPage();
+            yPosition = 20;
+          }
+
+          pdf.setFontSize(12);
+          pdf.setTextColor(0, 0, 0);
+          pdf.text(`Witness ${index + 1}:`, 25, yPosition);
+          yPosition += 8;
+          pdf.text(`Name: ${witness.name || 'N/A'}`, 30, yPosition);
+          yPosition += 8;
+          pdf.text(`Contact: ${witness.contact || 'N/A'}`, 30, yPosition);
+          yPosition += 10;
+        }
+      });
+    }
+
+    // Footer
+    pdf.setFontSize(10);
+    pdf.setTextColor(100, 100, 100);
+    const footerY = pdf.internal.pageSize.height - 10;
+    pdf.text('This document is computer generated and requires no signature', 105, footerY - 10, null, null, 'center');
+    pdf.text('For official use only - Anti-Corruption Commission of Bangladesh', 105, footerY, null, null, 'center');
+
+    // Save the PDF
+    pdf.save(`corruption-report-${referenceNumber}.pdf`);
+  };
+
+  // Reset form
+  const resetForm = () => {
+    setSubmitted(false);
+    setFiles([]);
+    setWitnesses([{ name: '', contact: '' }]);
+    setFormData(null);
+    if (formRef.current) formRef.current.reset();
+  };
+
+  // Submitted state UI
+  if (submitted) {
+    return (
+      <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 min-h-screen flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-lg text-center">
+          <div className="text-green-500 mb-4">
+            <CheckCircle size={48} className="mx-auto" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Report Submitted Successfully!</h2>
+          <p className="text-gray-600 mb-6">
+            Your reference number: <span className="font-mono font-bold">{referenceNumber}</span>
+          </p>
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={generatePDF}
+              className="bg-gradient-to-r from-orange-700 to-orange-600 text-white font-medium py-3 rounded-xl shadow-md hover:shadow-lg transition-all"
+            >
+              Download PDF
+            </button>
+            <button
+              onClick={resetForm}
+              className="bg-gray-100 text-gray-800 font-medium py-3 rounded-xl shadow hover:shadow-lg transition-all"
+            >
+              Submit Another Report
+            </button>
+          </div>
+          <p className="text-orange-700 text-sm mt-6">
+            Save your reference number. Track your report status at{' '}
+            <span className="font-semibold">www.acc.org.bd</span> or call the ACC hotline at{' '}
+            <span className="font-semibold">16110</span>.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Main form UI
   return (
     <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 min-h-screen py-10 px-4 mb-14">
       <div className="max-w-5xl mx-auto">
@@ -75,7 +314,11 @@ const CorruptionReportForm = () => {
           </div>
         </div>
 
-        <form className="space-y-8 bg-white rounded-2xl p-6 md:p-8 shadow-lg">
+        <form
+          ref={formRef}
+          onSubmit={handleSubmit}
+          className="space-y-8 bg-white rounded-2xl p-6 md:p-8 shadow-lg"
+        >
           {/* Complainant Information */}
           <div className="space-y-6">
             <h2 className="text-orange-800 text-xl font-bold border-b pb-2">
@@ -86,6 +329,7 @@ const CorruptionReportForm = () => {
               <div>
                 <label className="block text-orange-700 mb-2">Full Name <span className="text-red-600">*</span></label>
                 <input
+                  name="fullName"
                   type="text"
                   className="input input-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
                   required
@@ -94,6 +338,7 @@ const CorruptionReportForm = () => {
               <div>
                 <label className="block text-orange-700 mb-2">National ID (NID) Number <span className="text-red-600">*</span></label>
                 <input
+                  name="nid"
                   type="text"
                   className="input input-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
                   required
@@ -105,6 +350,7 @@ const CorruptionReportForm = () => {
               <div>
                 <label className="block text-orange-700 mb-2">Mobile Number <span className="text-red-600">*</span></label>
                 <input
+                  name="mobile"
                   type="tel"
                   className="input input-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
                   placeholder="01XXXXXXXXX"
@@ -114,6 +360,7 @@ const CorruptionReportForm = () => {
               <div>
                 <label className="block text-orange-700 mb-2">Email</label>
                 <input
+                  name="email"
                   type="email"
                   className="input input-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
                 />
@@ -121,6 +368,7 @@ const CorruptionReportForm = () => {
               <div>
                 <label className="block text-orange-700 mb-2">Profession</label>
                 <input
+                  name="profession"
                   type="text"
                   className="input input-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
                 />
@@ -130,6 +378,7 @@ const CorruptionReportForm = () => {
             <div>
               <label className="block text-orange-700 mb-2">Address <span className="text-red-600">*</span></label>
               <textarea
+                name="address"
                 className="textarea textarea-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
                 rows="3"
                 required
@@ -147,6 +396,7 @@ const CorruptionReportForm = () => {
               <div>
                 <label className="block text-orange-700 mb-2">Full Name/Organization <span className="text-red-600">*</span></label>
                 <input
+                  name="accusedName"
                   type="text"
                   className="input input-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
                   required
@@ -155,6 +405,7 @@ const CorruptionReportForm = () => {
               <div>
                 <label className="block text-orange-700 mb-2">Position/Designation</label>
                 <input
+                  name="accusedPosition"
                   type="text"
                   className="input input-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
                 />
@@ -165,6 +416,7 @@ const CorruptionReportForm = () => {
               <div>
                 <label className="block text-orange-700 mb-2">Office/Department <span className="text-red-600">*</span></label>
                 <input
+                  name="accusedOffice"
                   type="text"
                   className="input input-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
                   required
@@ -173,6 +425,7 @@ const CorruptionReportForm = () => {
               <div>
                 <label className="block text-orange-700 mb-2">Address</label>
                 <input
+                  name="accusedAddress"
                   type="text"
                   className="input input-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
                 />
@@ -190,6 +443,7 @@ const CorruptionReportForm = () => {
               <div>
                 <label className="block text-orange-700 mb-2">Date <span className="text-red-600">*</span></label>
                 <input
+                  name="incidentDate"
                   type="date"
                   className="input input-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
                   required
@@ -198,6 +452,7 @@ const CorruptionReportForm = () => {
               <div>
                 <label className="block text-orange-700 mb-2">Time</label>
                 <input
+                  name="incidentTime"
                   type="time"
                   className="input input-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
                 />
@@ -205,6 +460,7 @@ const CorruptionReportForm = () => {
               <div>
                 <label className="block text-orange-700 mb-2">Location <span className="text-red-600">*</span></label>
                 <input
+                  name="incidentLocation"
                   type="text"
                   className="input input-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
                   required
@@ -214,7 +470,11 @@ const CorruptionReportForm = () => {
 
             <div>
               <label className="block text-orange-700 mb-2">Corruption Type <span className="text-red-600">*</span></label>
-              <select className="select select-bordered w-full focus:ring-2 focus:ring-orange-300 transition" required>
+              <select
+                name="corruptionType"
+                className="select select-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
+                required
+              >
                 <option value="">Select type</option>
                 <option value="bribe">Bribery</option>
                 <option value="embezzlement">Embezzlement</option>
@@ -232,6 +492,7 @@ const CorruptionReportForm = () => {
                   BDT
                 </span>
                 <input
+                  name="amount"
                   type="number"
                   className="input input-bordered w-full rounded-l-none focus:ring-2 focus:ring-orange-300 transition"
                   placeholder="Amount in Taka"
@@ -242,6 +503,7 @@ const CorruptionReportForm = () => {
             <div>
               <label className="block text-orange-700 mb-2">Detailed Description <span className="text-red-600">*</span></label>
               <textarea
+                name="description"
                 className="textarea textarea-bordered w-full min-h-[150px] focus:ring-2 focus:ring-orange-300 transition"
                 placeholder="Describe the incident in detail..."
                 required
@@ -261,6 +523,12 @@ const CorruptionReportForm = () => {
                   <label className="block text-orange-700 mb-2">Witness Name</label>
                   <input
                     type="text"
+                    value={witness.name}
+                    onChange={(e) => {
+                      const newWitnesses = [...witnesses];
+                      newWitnesses[index].name = e.target.value;
+                      setWitnesses(newWitnesses);
+                    }}
                     className="input input-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
                   />
                 </div>
@@ -269,6 +537,12 @@ const CorruptionReportForm = () => {
                   <div className="flex">
                     <input
                       type="text"
+                      value={witness.contact}
+                      onChange={(e) => {
+                        const newWitnesses = [...witnesses];
+                        newWitnesses[index].contact = e.target.value;
+                        setWitnesses(newWitnesses);
+                      }}
                       className="input input-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
                       placeholder="Mobile/Email"
                     />

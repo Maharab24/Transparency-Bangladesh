@@ -77,6 +77,7 @@ const CorruptionReportForm = () => {
       email: formElements.email?.value || '',
       profession: formElements.profession?.value || '',
       address: formElements.address?.value || '',
+      division: formElements.division?.value || '', // Added division field
       accusedName: formElements.accusedName?.value || '',
       accusedPosition: formElements.accusedPosition?.value || '',
       accusedOffice: formElements.accusedOffice?.value || '',
@@ -129,6 +130,7 @@ const CorruptionReportForm = () => {
       { label: 'Email', value: formData.email },
       { label: 'Profession', value: formData.profession },
       { label: 'Address', value: formData.address },
+      { label: 'Division', value: formData.division }, // Added division to PDF
     ];
 
     fields.forEach(field => {
@@ -383,6 +385,25 @@ const CorruptionReportForm = () => {
                 rows="3"
                 required
               ></textarea>
+            </div>
+
+            {/* Added Division Field */}
+            <div>
+              <label className="block text-orange-700 mb-2">Division</label>
+              <select
+                name="division"
+                className="select select-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
+              >
+                <option value="">Select Division</option>
+                <option value="Barishal">Barishal</option>
+                <option value="Chattogram">Chattogram</option>
+                <option value="Dhaka">Dhaka</option>
+                <option value="Khulna">Khulna</option>
+                <option value="Mymensingh">Mymensingh</option>
+                <option value="Rajshahi">Rajshahi</option>
+                <option value="Rangpur">Rangpur</option>
+                <option value="Sylhet">Sylhet</option>
+              </select>
             </div>
           </div>
 

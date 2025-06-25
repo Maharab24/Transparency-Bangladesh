@@ -77,7 +77,6 @@ const CorruptionReportForm = () => {
       email: formElements.email?.value || '',
       profession: formElements.profession?.value || '',
       address: formElements.address?.value || '',
-      division: formElements.division?.value || '', // Added division field
       accusedName: formElements.accusedName?.value || '',
       accusedPosition: formElements.accusedPosition?.value || '',
       accusedOffice: formElements.accusedOffice?.value || '',
@@ -85,6 +84,7 @@ const CorruptionReportForm = () => {
       incidentDate: formElements.incidentDate?.value || '',
       incidentTime: formElements.incidentTime?.value || '',
       incidentLocation: formElements.incidentLocation?.value || '',
+      incidentDivision: formElements.incidentDivision?.value || '', // Changed to incidentDivision
       corruptionType: formElements.corruptionType?.value || '',
       amount: formElements.amount?.value || '',
       description: formElements.description?.value || '',
@@ -130,7 +130,6 @@ const CorruptionReportForm = () => {
       { label: 'Email', value: formData.email },
       { label: 'Profession', value: formData.profession },
       { label: 'Address', value: formData.address },
-      { label: 'Division', value: formData.division }, // Added division to PDF
     ];
 
     fields.forEach(field => {
@@ -174,6 +173,7 @@ const CorruptionReportForm = () => {
       { label: 'Date', value: formData.incidentDate },
       { label: 'Time', value: formData.incidentTime },
       { label: 'Location', value: formData.incidentLocation },
+      { label: 'Division', value: formData.incidentDivision }, // Added Division to incident details
       { label: 'Corruption Type', value: formData.corruptionType },
       { label: 'Amount Involved', value: formData.amount ? `BDT ${formData.amount}` : 'N/A' },
     ];
@@ -386,25 +386,6 @@ const CorruptionReportForm = () => {
                 required
               ></textarea>
             </div>
-
-            {/* Added Division Field */}
-            <div>
-              <label className="block text-orange-700 mb-2">Division</label>
-              <select
-                name="division"
-                className="select select-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
-              >
-                <option value="">Select Division</option>
-                <option value="Barishal">Barishal</option>
-                <option value="Chattogram">Chattogram</option>
-                <option value="Dhaka">Dhaka</option>
-                <option value="Khulna">Khulna</option>
-                <option value="Mymensingh">Mymensingh</option>
-                <option value="Rajshahi">Rajshahi</option>
-                <option value="Rangpur">Rangpur</option>
-                <option value="Sylhet">Sylhet</option>
-              </select>
-            </div>
           </div>
 
           {/* Accused Information */}
@@ -489,21 +470,42 @@ const CorruptionReportForm = () => {
               </div>
             </div>
 
-            <div>
-              <label className="block text-orange-700 mb-2">Corruption Type <span className="text-red-600">*</span></label>
-              <select
-                name="corruptionType"
-                className="select select-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
-                required
-              >
-                <option value="">Select type</option>
-                <option value="bribe">Bribery</option>
-                <option value="embezzlement">Embezzlement</option>
-                <option value="abuse">Abuse of Power</option>
-                <option value="favoritism">Favoritism</option>
-                <option value="fraud">Fraud</option>
-                <option value="other">Other</option>
-              </select>
+            {/* Added Division Field in Incident Details */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label className="block text-orange-700 mb-2">Division <span className="text-red-600">*</span></label>
+                <select
+                  name="incidentDivision"
+                  className="select select-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
+                  required
+                >
+                  <option value="">Select Division</option>
+                  <option value="Barishal">Barishal</option>
+                  <option value="Chattogram">Chattogram</option>
+                  <option value="Dhaka">Dhaka</option>
+                  <option value="Khulna">Khulna</option>
+                  <option value="Mymensingh">Mymensingh</option>
+                  <option value="Rajshahi">Rajshahi</option>
+                  <option value="Rangpur">Rangpur</option>
+                  <option value="Sylhet">Sylhet</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-orange-700 mb-2">Corruption Type <span className="text-red-600">*</span></label>
+                <select
+                  name="corruptionType"
+                  className="select select-bordered w-full focus:ring-2 focus:ring-orange-300 transition"
+                  required
+                >
+                  <option value="">Select type</option>
+                  <option value="bribe">Bribery</option>
+                  <option value="embezzlement">Embezzlement</option>
+                  <option value="abuse">Abuse of Power</option>
+                  <option value="favoritism">Favoritism</option>
+                  <option value="fraud">Fraud</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
             </div>
 
             <div>

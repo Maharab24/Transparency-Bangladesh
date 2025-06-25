@@ -135,7 +135,7 @@ const LoginPage = () => {
               <p className="text-[#ffd8c5]">Enterprise-grade security for your digital assets</p>
             </div>
 
-            
+
           </div>
 
           {/* Right Side - Login Form */}

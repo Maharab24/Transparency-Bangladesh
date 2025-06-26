@@ -1,6 +1,7 @@
 // src/components/LoginPage.jsx
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const LoginPage = () => {
   useEffect(() => {
@@ -14,6 +15,10 @@ const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [phoneError, setPhoneError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [loginError, setLoginError] = useState('');
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -21,6 +26,7 @@ const LoginPage = () => {
     // Reset errors
     setPhoneError('');
     setPasswordError('');
+    setLoginError('');
 
     // Validate phone number
     if (!phone) {
@@ -44,9 +50,21 @@ const LoginPage = () => {
       return;
     }
 
-    // If validation passes, proceed with login
+    // Determine login type
     const loginType = showUserLogin ? 'user' : 'admin';
-    alert(`Login attempt as ${loginType}: ${phone}`);
+
+    // Attempt login
+    const user = login(phone, password, loginType);
+
+    if (user) {
+      if (user.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/');
+      }
+    } else {
+      setLoginError('Invalid credentials or unauthorized access');
+    }
   };
 
   const toggleUserLogin = () => {
@@ -54,6 +72,7 @@ const LoginPage = () => {
     setShowAdminLogin(false);
     setPhoneError('');
     setPasswordError('');
+    setLoginError('');
   };
 
   const toggleAdminLogin = () => {
@@ -61,6 +80,7 @@ const LoginPage = () => {
     setShowUserLogin(false);
     setPhoneError('');
     setPasswordError('');
+    setLoginError('');
   };
 
   const goBack = () => {
@@ -68,6 +88,7 @@ const LoginPage = () => {
     setShowAdminLogin(false);
     setPhoneError('');
     setPasswordError('');
+    setLoginError('');
   };
 
   // Custom SVG icons with the new primary color
@@ -83,20 +104,14 @@ const LoginPage = () => {
     </svg>
   );
 
-  const FingerprintIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="#f6824d">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
-    </svg>
-  );
-
   const LoginIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="white">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
     </svg>
   );
 
-  const UserPlusIcon = ({ className = "" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${className}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  const UserPlusIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
     </svg>
   );
@@ -134,8 +149,6 @@ const LoginPage = () => {
               </div>
               <p className="text-[#ffd8c5]">Enterprise-grade security for your digital assets</p>
             </div>
-
-
           </div>
 
           {/* Right Side - Login Form */}
@@ -188,6 +201,15 @@ const LoginPage = () => {
                   Sign in to your {showUserLogin ? 'user' : 'admin'} account
                 </p>
 
+                {loginError && (
+                  <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {loginError}
+                  </div>
+                )}
+
                 <form onSubmit={handleLogin}>
                   <div className="form-control mb-4">
                     <label className="label">
@@ -204,7 +226,6 @@ const LoginPage = () => {
                         required
                         value={phone}
                         onChange={(e) => {
-                          // Only allow numbers and limit to 11 digits
                           const value = e.target.value.replace(/\D/g, '').slice(0, 11);
                           setPhone(value);
                           if (phoneError) setPhoneError('');

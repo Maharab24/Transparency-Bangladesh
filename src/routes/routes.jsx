@@ -17,6 +17,19 @@ import ContactPage from "../components/ContactPage";
 import TrainingSession from "../components/education/TrainingSession";
 import AntiCorruptionLaws from "../components/education/AntiCorruptionLaws";
 import AntiCorruptionEvents from "../components/education/AntiCorruptionEvents";
+// Admin imports
+import AdminLayout from "../admin/layouts/AdminLaout";
+
+import Dashboard from "../admin/pages/Dashboard";
+import ManageUsers from "../admin/pages/ManageUsers";
+import ManageAdmins from "../admin/pages/ManageAdmins";
+
+import { useAuth } from "../context/AuthContext";
+// Admin Route Protection
+const AdminRoute = ({ children }) => {
+  const { user } = useAuth();
+  return user?.role === 'admin' ? children : <Navigate to="/LoginPage" />;
+};
 
 export const router = createBrowserRouter([
   {
@@ -79,11 +92,11 @@ export const router = createBrowserRouter([
         path: "/TrainingSession",
         element: <TrainingSession></TrainingSession>,
       },
-       {
+      {
         path: "/AntiCorruptionLaws",
         element: <AntiCorruptionLaws></AntiCorruptionLaws>,
       },
-       {
+      {
         path: "/AntiCorruptionEvents",
         element: <AntiCorruptionEvents></AntiCorruptionEvents>,
       },
@@ -91,4 +104,21 @@ export const router = createBrowserRouter([
 
     ]
   },
+
+  {
+    path: "/admin",
+    element: (
+      <AdminRoute>
+        <AdminLayout />
+      </AdminRoute>
+    ),
+    children: [
+      { index: true, element: <Dashboard /> },
+      { path: "dashboard", element: <Dashboard /> },
+      { path: "users", element: <ManageUsers /> },
+      { path: "admins", element: <ManageAdmins /> },
+    ]
+  }
+
+
 ]);

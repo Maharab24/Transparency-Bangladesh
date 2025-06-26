@@ -24,6 +24,13 @@ import Dashboard from "../admin/pages/Dashboard";
 import ManageUsers from "../admin/pages/ManageUsers";
 import ManageAdmins from "../admin/pages/ManageAdmins";
 
+import ManageReports from "../admin/pages/ManageReports";
+import ManageCases from "../admin/pages/ManageCases";
+import ManageHeatmap from "../admin/pages/ManageHeatmap";
+import ManageEducation from "../admin/pages/ManageEducation";
+import ManageRewards from "../admin/pages/ManageRewards";
+import ManageGovtSpending from "../admin/pages/ManageGovtSpending";
+
 import { useAuth } from "../context/AuthContext";
 // Admin Route Protection
 const AdminRoute = ({ children }) => {
@@ -117,6 +124,12 @@ export const router = createBrowserRouter([
       { path: "dashboard", element: <Dashboard /> },
       { path: "users", element: <ManageUsers /> },
       { path: "admins", element: <ManageAdmins /> },
+      { path: "reports", element: <ManageReports /> },
+      { path: "cases", element: <ManageCases /> },
+      { path: "heatmap", element: <ManageHeatmap /> },
+      { path: "education", element: <ManageEducation /> },
+      { path: "rewards", element: <ManageRewards /> },
+      { path: "govt-spending", element: <ManageGovtSpending /> },
     ]
   }
 

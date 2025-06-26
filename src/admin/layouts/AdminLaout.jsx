@@ -4,7 +4,7 @@ import AdminHeader from '../components/AdminHeader';
 
 const AdminLayout = () => {
   return (
-    <div className="admin-container">
+    <div className="admin-container mt-14">
       <AdminSidebar />
       <div className="admin-content">
         <AdminHeader />

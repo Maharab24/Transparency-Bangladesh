@@ -31,6 +31,8 @@ import ManageEducation from "../admin/pages/ManageEducation";
 import ManageRewards from "../admin/pages/ManageRewards";
 import ManageGovtSpending from "../admin/pages/ManageGovtSpending";
 
+import { Navigate } from "react-router-dom";
+
 import { useAuth } from "../context/AuthContext";
 // Admin Route Protection
 const AdminRoute = ({ children }) => {

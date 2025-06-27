@@ -31,6 +31,7 @@ import ManageEducation from "../admin/pages/ManageEducation";
 import ManageRewards from "../admin/pages/ManageRewards";
 import ManageGovtSpending from "../admin/pages/ManageGovtSpending";
 
+import UserDashboard from "../pages/UserDashboard";
 
 
 import { Navigate } from "react-router-dom";
@@ -41,6 +42,14 @@ const AdminRouteWrapper = ({ children }) => {
   const { user } = useAuth();
   return user?.role === 'admin' ? children : <Navigate to="/LoginPage" />;
 };
+
+
+// Add Protected Route Wrapper for authenticated users
+const ProtectedRoute = ({ children }) => {
+  const { user } = useAuth();
+  return user ? children : <Navigate to="/LoginPage" />;
+};
+
 
 export const router = createBrowserRouter([
   {
@@ -110,6 +119,14 @@ export const router = createBrowserRouter([
       {
         path: "/AntiCorruptionEvents",
         element: <AntiCorruptionEvents></AntiCorruptionEvents>,
+      },
+         {
+        path: "/dashboard",
+        element: (
+          <ProtectedRoute>
+            <UserDashboard />
+          </ProtectedRoute>
+        ),
       },
 
 

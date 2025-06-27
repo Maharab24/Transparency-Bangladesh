@@ -1,15 +1,20 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { FiUser, FiX, FiMenu } from "react-icons/fi";
 import logo from '../assets/images/logo.png';
-import { Link } from "react-router-dom";
-import LoginPage from "./login/LoginPage";
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
-
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+    setIsMenuOpen(false);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,7 +27,6 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Navbar */}
       <nav className={`fixed w-full z-50 transition-all duration-500 ${
         scrolled ? 'bg-white shadow-lg py-2' : 'bg-[#f6824d] py-4'
       }`}>
@@ -30,18 +34,18 @@ const Navbar = () => {
           <div className="flex justify-between items-center">
             {/* Logo */}
             <Link to="/">
-            <div className="flex items-center">
-              <img
-                className="w-10 h-10 md:w-14 md:h-14 transition-all duration-300"
-                src={logo}
-                alt="Transparency Bangladesh Logo"
-              />
-              <span className={`ml-2 text-xl md:text-2xl font-bold transition-all duration-300 ${
-                scrolled ? 'text-[#f6824d]' : 'text-white'
-              }`}>
-                Transparency Bangladesh
-              </span>
-            </div>
+              <div className="flex items-center">
+                <img
+                  className="w-10 h-10 md:w-14 md:h-14 transition-all duration-300"
+                  src={logo}
+                  alt="Transparency Bangladesh Logo"
+                />
+                <span className={`ml-2 text-xl md:text-2xl font-bold transition-all duration-300 ${
+                  scrolled ? 'text-[#f6824d]' : 'text-white'
+                }`}>
+                  Transparency Bangladesh
+                </span>
+              </div>
             </Link>
 
             {/* Desktop Navigation */}
@@ -61,14 +65,12 @@ const Navbar = () => {
               </NavLink>
 
               <Link to="/AboutUs">
-              <button
-
-                className={`relative px-1 py-2 font-medium transition-all duration-300 ${
+                <button className={`relative px-1 py-2 font-medium transition-all duration-300 ${
                   scrolled ? 'text-gray-700 hover:text-[#f6824d]' : 'text-white hover:text-[#33a954]'
-                }`}
-              >
-                About
-              </button></Link>
+                }`}>
+                  About
+                </button>
+              </Link>
 
               <NavLink
                 to='/ContactPage'
@@ -83,13 +85,40 @@ const Navbar = () => {
                 Contact
               </NavLink>
 
-              <NavLink
-                to='/LoginPage'
-                className="flex items-center px-4 py-2 bg-[#33a954] text-white rounded-full hover:bg-[#2a8d45] transition-all duration-300 shadow-md hover:shadow-lg"
-              >
-                <FiUser className="mr-2" />
-                Log In
-              </NavLink>
+              {/* Conditionally show Dashboard */}
+              {user && (
+                <NavLink
+                  to='/dashboard'
+                  className={({ isActive }) =>
+                    `relative px-1 py-2 font-medium transition-all duration-300 ${
+                      isActive
+                        ? 'text-[#33a954] font-bold'
+                        : scrolled ? 'text-gray-700 hover:text-[#f6824d]' : 'text-white hover:text-[#33a954]'
+                    }`
+                  }
+                >
+                  Dashboard
+                </NavLink>
+              )}
+
+              {/* Conditionally show Login/Logout */}
+              {user ? (
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center px-4 py-2 bg-[#33a954] text-white rounded-full hover:bg-[#2a8d45] transition-all duration-300 shadow-md hover:shadow-lg"
+                >
+                  <FiUser className="mr-2" />
+                  Logout
+                </button>
+              ) : (
+                <NavLink
+                  to='/LoginPage'
+                  className="flex items-center px-4 py-2 bg-[#33a954] text-white rounded-full hover:bg-[#2a8d45] transition-all duration-300 shadow-md hover:shadow-lg"
+                >
+                  <FiUser className="mr-2" />
+                  Log In
+                </NavLink>
+              )}
             </div>
 
             {/* Mobile menu button */}
@@ -139,40 +168,59 @@ const Navbar = () => {
             <div className="flex flex-col items-center justify-center flex-grow space-y-5">
               <NavLink
                 to='/'
-                className={
-                  `text-2xl font-medium px-4 py-2 transition-all text-black`
-                }
+                className="text-2xl font-medium px-4 py-2 transition-all text-black"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
               </NavLink>
 
               <Link to="/AboutUs">
-              <button
-
-                className={`text-2xl px-1 py-2 font-medium transition-all duration-300 text-black`}
-              >
-                About
-              </button></Link>
+                <button
+                  className="text-2xl px-1 py-2 font-medium transition-all duration-300 text-black"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  About
+                </button>
+              </Link>
 
               <NavLink
                 to='/ContactPage'
-                className={
-                  `text-2xl font-medium px-4 py-2 transition-all $`
-                }
+                className="text-2xl font-medium px-4 py-2 transition-all text-black"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact
               </NavLink>
 
-              <NavLink
-                to='/LoginPage'
-                className="mt-8 flex items-center px-6 py-3 bg-[#33a954] text-white text-xl rounded-full hover:bg-[#2a8d45] transition-all duration-300"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <FiUser className="mr-2" />
-                Log In
-              </NavLink>
+              {/* Conditionally show Dashboard in mobile */}
+              {user && (
+                <NavLink
+                  to='/dashboard'
+                  className="text-2xl font-medium px-4 py-2 transition-all text-black"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Dashboard
+                </NavLink>
+              )}
+
+              {/* Conditionally show Login/Logout in mobile */}
+              {user ? (
+                <button
+                  onClick={handleLogout}
+                  className="mt-8 flex items-center px-6 py-3 bg-[#33a954] text-white text-xl rounded-full hover:bg-[#2a8d45] transition-all duration-300"
+                >
+                  <FiUser className="mr-2" />
+                  Logout
+                </button>
+              ) : (
+                <NavLink
+                  to='/LoginPage'
+                  className="mt-8 flex items-center px-6 py-3 bg-[#33a954] text-white text-xl rounded-full hover:bg-[#2a8d45] transition-all duration-300"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <FiUser className="mr-2" />
+                  Log In
+                </NavLink>
+              )}
             </div>
 
             <div className="p-6 text-center text-gray-500">

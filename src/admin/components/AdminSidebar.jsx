@@ -13,7 +13,7 @@ const AdminSidebar = () => {
     { path: '/admin/cases', label: 'Manage Cases'},
     { path: '/admin/heatmap', label: 'Manage Heatmap' },
     { path: '/admin/education', label: 'Manage Education' },
-    { path: '/admin/rewards', label: 'Manage Rewards'},
+   
     { path: '/admin/govt-spending', label: 'Govt Spending' },
   ];
 

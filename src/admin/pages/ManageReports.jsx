@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FiEye, FiUser, FiFileText, FiMapPin, FiClock, FiX, FiCheck, FiUserCheck, FiUserX } from 'react-icons/fi';
+import { FiEye, FiUser, FiFileText, FiClock, FiX, FiCheck, FiUserCheck, FiUserX, FiAward } from 'react-icons/fi';
 
 function ManageReports() {
   const [reports, setReports] = useState([]);
@@ -8,6 +8,9 @@ function ManageReports() {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('all');
   const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [isRewardModalOpen, setIsRewardModalOpen] = useState(false);
+  const [rewardMessage, setRewardMessage] = useState('');
+  const [selectedReportForReward, setSelectedReportForReward] = useState(null);
 
   // Sample data with all reports set to 'pending' status by default
   useEffect(() => {
@@ -28,7 +31,8 @@ function ManageReports() {
           division: 'Dhaka',
           status: 'pending', // Default status
           createdAt: '2025-06-25T10:30:00Z',
-          files: ['evidence1.jpg', 'document.pdf']
+          files: ['evidence1.jpg', 'document.pdf'],
+          rewarded: false // New property to track reward status
         },
         {
           id: 'CR-002',
@@ -38,7 +42,8 @@ function ManageReports() {
           division: 'Chittagong',
           status: 'pending', // Default status
           createdAt: '2025-06-26T14:45:00Z',
-          files: ['evidence2.png']
+          files: ['evidence2.png'],
+          rewarded: false // New property to track reward status
         },
         {
           id: 'CR-003',
@@ -54,7 +59,8 @@ function ManageReports() {
           division: 'Rajshahi',
           status: 'pending', // Default status
           createdAt: '2025-06-27T09:15:00Z',
-          files: ['document1.pdf', 'document2.pdf']
+          files: ['document1.pdf', 'document2.pdf'],
+          rewarded: false // New property to track reward status
         }
       ]);
       setLoading(false);
@@ -73,6 +79,36 @@ function ManageReports() {
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedReport(null);
+  };
+
+  const openRewardModal = (report) => {
+    setSelectedReportForReward(report);
+    setIsRewardModalOpen(true);
+    setRewardMessage('');
+  };
+
+  const closeRewardModal = () => {
+    setIsRewardModalOpen(false);
+    setSelectedReportForReward(null);
+  };
+
+  const handleRewardSubmit = () => {
+    if (!selectedReportForReward) return;
+
+    // Update the report to mark it as rewarded
+    const updatedReports = reports.map(report =>
+      report.id === selectedReportForReward.id
+        ? { ...report, rewarded: true }
+        : report
+    );
+
+    setReports(updatedReports);
+
+    // Log the reward message (in a real app, this would be sent to the backend)
+    console.log(`Reward for report ${selectedReportForReward.id}: ${rewardMessage}`);
+
+    // Close the modal
+    closeRewardModal();
   };
 
   const getStatusColor = (status) => {
@@ -162,7 +198,6 @@ function ManageReports() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reporter</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Division</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
@@ -170,7 +205,7 @@ function ManageReports() {
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredReports.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
+                  <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
                     No reports found
                   </td>
                 </tr>
@@ -197,22 +232,38 @@ function ManageReports() {
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-gray-700">
-                      {report.division}
-                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(report.status)}`}>
                         {getStatusText(report.status)}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <button
-                        onClick={() => openReportDetails(report)}
-                        className="bg-red-100 text-red-700 hover:bg-red-200 transition-colors px-4 py-2 rounded-xl flex items-center"
-                      >
-                        <FiEye className="mr-2" />
-                        View Details
-                      </button>
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => openReportDetails(report)}
+                          className="bg-red-100 text-red-700 hover:bg-red-200 transition-colors px-3 py-2 rounded-xl flex items-center"
+                        >
+                          <FiEye className="mr-1" />
+                          <span className="hidden sm:inline">Details</span>
+                        </button>
+
+                        {!report.isAnonymous && (
+                          report.rewarded ? (
+                            <span className="bg-green-100 text-green-700 px-3 py-2 rounded-xl flex items-center">
+                              <FiCheck className="mr-1" />
+                              <span className="hidden sm:inline">Reward Sent</span>
+                            </span>
+                          ) : (
+                            <button
+                              onClick={() => openRewardModal(report)}
+                              className="bg-green-100 text-green-700 hover:bg-green-200 transition-colors px-3 py-2 rounded-xl flex items-center"
+                            >
+                              <FiAward className="mr-1" />
+                              <span className="hidden sm:inline">Reward</span>
+                            </button>
+                          )
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -416,10 +467,99 @@ function ManageReports() {
           </div>
         </div>
       )}
+
+      {/* Reward Modal */}
+      {isRewardModalOpen && selectedReportForReward && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl">
+            <div className="bg-gradient-to-r from-green-500 to-green-600 p-6 text-white flex justify-between items-center">
+              <h2 className="text-xl md:text-2xl font-bold">
+                <FiAward className="inline mr-3" />
+                Reward Reporter: {selectedReportForReward.id}
+              </h2>
+              <button
+                onClick={closeRewardModal}
+                className="text-white hover:text-gray-200"
+              >
+                <FiX size={24} />
+              </button>
+            </div>
+
+            <div className="p-6">
+              <div className="mb-6">
+                <h3 className="font-bold text-gray-800 mb-3">Report Information</h3>
+                <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-500">Report ID</p>
+                      <p className="font-medium">{selectedReportForReward.id}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Report Type</p>
+                      <p className="font-medium">{selectedReportForReward.type}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Reporter</p>
+                      <p className="font-medium">
+                        {selectedReportForReward.isAnonymous
+                          ? "Anonymous"
+                          : selectedReportForReward.user.name}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Reporter Email</p>
+                      <p className="font-medium">
+                        {selectedReportForReward.isAnonymous
+                          ? "N/A"
+                          : selectedReportForReward.user.email}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <h3 className="font-bold text-gray-800 mb-3">Reward Details</h3>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Reward Message
+                  </label>
+                  <textarea
+                    value={rewardMessage}
+                    onChange={(e) => setRewardMessage(e.target.value)}
+                    rows="4"
+                    className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    placeholder="Enter the reward details or message for the reporter..."
+                  ></textarea>
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-3 pt-4">
+                <button
+                  onClick={closeRewardModal}
+                  className="px-6 py-2 bg-gray-200 text-gray-800 rounded-xl font-medium hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleRewardSubmit}
+                  disabled={!rewardMessage.trim()}
+                  className={`px-6 py-2 rounded-xl font-medium flex items-center ${
+                    !rewardMessage.trim()
+                      ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                      : 'bg-green-500 text-white hover:bg-green-600'
+                  }`}
+                >
+                  <FiAward className="mr-2" />
+                  Send Reward
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 export default ManageReports;
-
-

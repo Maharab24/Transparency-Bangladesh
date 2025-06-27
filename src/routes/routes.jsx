@@ -28,7 +28,7 @@ import ManageReports from "../admin/pages/ManageReports";
 import ManageCases from "../admin/pages/ManageCases";
 import ManageHeatmap from "../admin/pages/ManageHeatmap";
 import ManageEducation from "../admin/pages/ManageEducation";
-import ManageRewards from "../admin/pages/ManageRewards";
+
 import ManageGovtSpending from "../admin/pages/ManageGovtSpending";
 
 import UserDashboard from "../pages/UserDashboard";
@@ -159,7 +159,7 @@ export const router = createBrowserRouter([
       { path: "cases", element: <ManageCases /> },
       { path: "heatmap", element: <ManageHeatmap /> },
       { path: "education", element: <ManageEducation /> },
-      { path: "rewards", element: <ManageRewards /> },
+
       { path: "govt-spending", element: <ManageGovtSpending /> },
     ]
   }

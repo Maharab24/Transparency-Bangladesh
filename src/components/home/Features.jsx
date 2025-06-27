@@ -110,7 +110,7 @@ const Features = () => {
             >
               {/* Gradient overlay for text contrast */}
               {/*  from-black/70 to-black/10 */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/10  "></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/10   "></div>
             </div>
 
             {/* Hover effect overlay */}

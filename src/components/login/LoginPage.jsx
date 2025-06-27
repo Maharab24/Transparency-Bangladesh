@@ -51,10 +51,19 @@ const LoginPage = () => {
     }
 
     // Determine login type
-    const loginType = showUserLogin ? 'user' : 'admin';
+     let loginType;
+    if (showUserLogin) {
+      loginType = 'user';
+    } else if (showAdminLogin) {
+      loginType = 'admin';
+    } else {
+      setLoginError('Invalid login type');
+      return;
+    }
 
     // Attempt login
     const user = login(phone, password, loginType);
+
 
     if (user) {
       if (user.role === 'admin') {
@@ -64,6 +73,9 @@ const LoginPage = () => {
       }
     } else {
       setLoginError('Invalid credentials or unauthorized access');
+      // CLEAR INPUT FIELDS ON FAILED LOGIN
+      setPhone('');
+      setPassword('');
     }
   };
 

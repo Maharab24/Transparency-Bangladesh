@@ -4,12 +4,11 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    // Initialize from localStorage if available
     const storedUser = localStorage.getItem('user');
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
-  // Updated mock users with phone numbers
+  // Updated mock users with clear role separation
   const mockUsers = [
     { id: 1, phone: '01234567890', password: 'user123', role: 'user', name: 'Regular User' },
     { id: 2, phone: '01841213662', password: 'admin123', role: 'admin', name: 'Admin User' }
@@ -21,12 +20,14 @@ export const AuthProvider = ({ children }) => {
     );
 
     if (foundUser) {
-      // Verify role access
+      // Strict role verification
       if (loginType === 'admin' && foundUser.role !== 'admin') {
-        return null; // Block non-admin from admin login
+        return null; // Block user from admin login
+      }
+      if (loginType === 'user' && foundUser.role !== 'user') {
+        return null; // Block admin from user login
       }
 
-      // Save to localStorage
       localStorage.setItem('user', JSON.stringify(foundUser));
       setUser(foundUser);
       return foundUser;
@@ -35,7 +36,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    // Clear localStorage
     localStorage.removeItem('user');
     setUser(null);
   };

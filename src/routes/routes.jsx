@@ -31,11 +31,13 @@ import ManageEducation from "../admin/pages/ManageEducation";
 import ManageRewards from "../admin/pages/ManageRewards";
 import ManageGovtSpending from "../admin/pages/ManageGovtSpending";
 
+
+
 import { Navigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
-// Admin Route Protection
-const AdminRoute = ({ children }) => {
+// Admin Route Protection Wrapper
+const AdminRouteWrapper = ({ children }) => {
   const { user } = useAuth();
   return user?.role === 'admin' ? children : <Navigate to="/LoginPage" />;
 };
@@ -117,9 +119,9 @@ export const router = createBrowserRouter([
   {
     path: "/admin",
     element: (
-      <AdminRoute>
+      <AdminRouteWrapper>
         <AdminLayout />
-      </AdminRoute>
+      </AdminRouteWrapper>
     ),
     children: [
       { index: true, element: <Dashboard /> },

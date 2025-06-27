@@ -1,6 +1,23 @@
 import { Link } from 'react-router-dom';
+// Import background images
+import reportingtool from '../../assets/images/reportingtool.jpg';
+import heatmap from '../../assets/images/heatmap.jpeg';
+import casetracking from '../../assets/images/casetracking.jpg';
+import education from '../../assets/images/education.jpg';
+import reward from '../../assets/images/reward.jpg';
+import govtspending from '../../assets/images/govtspending.jpg';
 
 const Features = () => {
+  // Map features to their background images
+  const featureBackgrounds = {
+    '/reporting': reportingtool,
+    '/heatmap': heatmap,
+    '/case': casetracking,
+    '/education': education,
+    '/reward': reward,
+    '/DetailedReport': govtspending
+  };
+
   // Feature data array
   const features = [
     {
@@ -63,7 +80,7 @@ const Features = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
-      description: "Track how public funds are being utilized"
+      description: "Track how public funds are being utilized in every sector"
     }
   ];
 
@@ -86,24 +103,35 @@ const Features = () => {
             key={index}
             className="group relative block overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-50 to-orange-100 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            {/* Background image */}
+            <div
+              className="absolute inset-0 bg-cover bg-center z-0"
+              style={{ backgroundImage: `url(${featureBackgrounds[feature.path]})` }}
+            >
+              {/* Gradient overlay for text contrast */}
+              {/*  from-black/70 to-black/10 */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/10  "></div>
+            </div>
 
-            <div className="relative p-6 z-10">
-              <div className="w-20 h-20 mx-auto rounded-full bg-orange-100 group-hover:bg-orange-200 flex items-center justify-center transition-all duration-300">
+            {/* Hover effect overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-orange-700/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
+
+            <div className="relative p-6 z-20">
+              <div className="w-20 h-20 mx-auto rounded-full bg-orange-500/20 backdrop-blur-sm group-hover:bg-orange-500/30 flex items-center justify-center transition-all duration-300 border border-orange-400/30">
                 {feature.icon}
               </div>
 
               <div className="mt-6 text-center">
-                <h3 className="text-xl font-bold text-gray-800 group-hover:text-orange-700 transition-colors duration-300">
+                <h3 className="text-xl font-bold text-white group-hover:text-white transition-colors duration-300">
                   {feature.title}
                 </h3>
-                <p className="mt-3 text-gray-600 group-hover:text-gray-800 transition-colors duration-300">
+                <p className="mt-3 text-orange-100 group-hover:text-orange-50 transition-colors duration-300">
                   {feature.description}
                 </p>
               </div>
 
               <div className="mt-6 flex justify-center">
-                <span className="inline-flex items-center text-orange-600 font-medium group-hover:text-orange-800 transition-colors duration-300">
+                <span className="inline-flex items-center text-orange-300 font-medium group-hover:text-white transition-colors duration-300">
                   Explore feature
                   <svg xmlns="http://www.w3.org/2000/svg" className="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -112,7 +140,7 @@ const Features = () => {
               </div>
             </div>
 
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-orange-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-orange-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left z-20"></div>
           </Link>
         ))}
       </div>

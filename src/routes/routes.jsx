@@ -33,6 +33,8 @@ import ManageGovtSpending from "../admin/pages/ManageGovtSpending";
 
 import UserDashboard from "../pages/UserDashboard";
 
+import NotificationsPage from "../pages/NotificationsPage";
+
 
 import { Navigate } from "react-router-dom";
 
@@ -128,6 +130,14 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+  path: "/notifications",
+  element: (
+    <ProtectedRoute>
+      <NotificationsPage />
+    </ProtectedRoute>
+  ),
+},
 
 
     ]

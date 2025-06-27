@@ -1,13 +1,19 @@
 import { NavLink, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { FiUser, FiX, FiMenu } from "react-icons/fi";
+import { FiUser, FiX, FiMenu, FiBell } from "react-icons/fi";
 import logo from '../assets/images/logo.png';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { user, logout } = useAuth();
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const {
+    user,
+    logout,
+    notifications,
+    markNotificationAsRead
+  } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -24,6 +30,28 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Calculate unread notifications count
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  // Get latest 3 notifications sorted by date (newest first)
+  const latestNotifications = [...notifications]
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 3);
+
+  // Format time difference (e.g., "2 hours ago")
+  const formatTimeDifference = (date) => {
+    const now = new Date();
+    const diffMs = now - new Date(date);
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMins < 1) return "Just now";
+    if (diffMins < 60) return `${diffMins} min ago`;
+    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+  };
 
   return (
     <>
@@ -49,7 +77,7 @@ const Navbar = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden md:flex items-center space-x-4">
               <NavLink
                 to='/'
                 className={({ isActive }) =>
@@ -101,6 +129,76 @@ const Navbar = () => {
                 </NavLink>
               )}
 
+              {/* Notification Icon - Only shown when user is logged in */}
+              {user && (
+                <div className="relative">
+                  <button
+                    onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                    className={`p-2 rounded-full relative ${
+                      scrolled
+                        ? 'text-gray-700 hover:bg-gray-100'
+                        : 'text-white hover:bg-[#e67342]'
+                    } transition-colors duration-300`}
+                  >
+                    <FiBell className="h-5 w-5" />
+                    {unreadCount > 0 && (
+                      <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        {unreadCount}
+                      </span>
+                    )}
+                  </button>
+
+                  {/* Notification Dropdown */}
+                  {isNotificationOpen && (
+                    <div className="absolute right-0 mt-2 w-72 bg-white rounded-md shadow-lg overflow-hidden z-50">
+                      <div className="py-1">
+                        <div className="px-4 py-2 border-b bg-gray-50">
+                          <h3 className="text-sm font-medium text-gray-900">Notifications</h3>
+                        </div>
+
+                        {latestNotifications.length > 0 ? (
+                          latestNotifications.map(notification => (
+                            <div
+                              key={notification.id}
+                              className={`px-4 py-3 border-b hover:bg-gray-50 cursor-pointer ${
+                                !notification.read ? 'bg-blue-50' : ''
+                              }`}
+                              onClick={() => {
+                                if (!notification.read) {
+                                  markNotificationAsRead(notification.id);
+                                }
+                                setIsNotificationOpen(false);
+                                // Add navigation to relevant page
+                                // navigate('/case');
+                              }}
+                            >
+                              <p className="text-sm text-gray-800">{notification.text}</p>
+                              <p className="text-xs text-gray-500 mt-1">
+                                {formatTimeDifference(notification.date)}
+                              </p>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="px-4 py-3 text-sm text-gray-500">No notifications</p>
+                        )}
+
+                        <div className="px-4 py-2 bg-gray-50 text-center">
+                          <button
+                            className="text-sm text-[#33a954] font-medium hover:underline"
+                            onClick={() => {
+                              navigate('/notifications');
+                              setIsNotificationOpen(false);
+                            }}
+                          >
+                            View All
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Conditionally show Login/Logout */}
               {user ? (
                 <button
@@ -123,6 +221,30 @@ const Navbar = () => {
 
             {/* Mobile menu button */}
             <div className="md:hidden flex items-center">
+              {/* Notification Icon for Mobile - Only shown when user is logged in */}
+              {user && (
+                <div className="relative mr-3">
+                  <button
+                    onClick={() => {
+                      navigate('/notifications');
+                      setIsMenuOpen(false);
+                    }}
+                    className={`p-2 rounded-full relative ${
+                      scrolled
+                        ? 'text-gray-700 hover:bg-gray-100'
+                        : 'text-white hover:bg-[#e67342]'
+                    } transition-colors duration-300`}
+                  >
+                    <FiBell className="h-6 w-6" />
+                    {unreadCount > 0 && (
+                      <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        {unreadCount}
+                      </span>
+                    )}
+                  </button>
+                </div>
+              )}
+
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className={`p-2 rounded-full ${
@@ -199,6 +321,23 @@ const Navbar = () => {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Dashboard
+                </NavLink>
+              )}
+
+              {/* Conditionally show Notifications in mobile */}
+              {user && (
+                <NavLink
+                  to='/notifications'
+                  className="text-2xl font-medium px-4 py-2 transition-all text-black flex items-center"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <FiBell className="mr-2" />
+                  Notifications
+                  {unreadCount > 0 && (
+                    <span className="ml-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {unreadCount}
+                    </span>
+                  )}
                 </NavLink>
               )}
 

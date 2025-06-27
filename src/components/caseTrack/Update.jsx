@@ -1,7 +1,11 @@
 import React from 'react';
 import { FiClock, FiCheckCircle, FiAlertTriangle, FiBarChart2 } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 const Update = () => {
+    const { user } = useAuth(); // Get authentication state
+    const navigate = useNavigate(); // Navigation hook
+
     const cases = [
         { id: "C-2023-045", name: "State vs. Rahman", type: "Bribery", status: "Ongoing", sentence: "Pending", lastUpdate: "2 days ago" },
         { id: "C-2023-112", name: "State vs. Ahmed", type: "Embezzlement", status: "Appealed", sentence: "7 years", lastUpdate: "1 week ago" },
@@ -13,6 +17,16 @@ const Update = () => {
         { title: "Solved Cases", value: 200, icon: <FiCheckCircle className="text-2xl" />, color: "bg-green-100", textColor: "text-green-600" },
         { title: "Pending Cases", value: 100, icon: <FiClock className="text-2xl" />, color: "bg-blue-100", textColor: "text-blue-600" },
     ];
+
+    const handleReportCase = () => {
+        if (!user) {
+            // Redirect to login if not authenticated
+            navigate('/LoginPage');
+        } else {
+            // Go to form page if authenticated
+            navigate('/form');
+        }
+    };
 
     const getStatusColor = (status) => {
         switch(status.toLowerCase()) {
@@ -33,25 +47,21 @@ const Update = () => {
     };
 
     return (
-        <div className=" bg-gradient-to-b from-gray-50 to-gray-100 px-4">
+        <div className="bg-gradient-to-b from-gray-50 to-gray-100 px-4">
             <div className="max-w-6xl mx-auto">
-
-
-
-
-
-
-
-
                 {/* Action Section */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl p-6 text-white">
                         <h3 className="text-xl font-bold mb-3">Need to Report a New Case?</h3>
                         <p className="mb-4 opacity-90">Submit information about a new corruption incident</p>
 
-                         <Link to='/form'>
-                    <button className="px-5 py-3 bg-white text-orange-600 rounded-full font-medium hover:bg-gray-100 transition-colors">Report Your case</button>
-                </Link>
+                        {/* Updated Report Case Button */}
+                        <button
+                            onClick={handleReportCase}
+                            className="px-5 py-3 bg-white text-orange-600 rounded-full font-medium hover:bg-gray-100 transition-colors"
+                        >
+                            Report Your case
+                        </button>
                     </div>
 
                     <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-6 text-white">
@@ -63,11 +73,8 @@ const Update = () => {
                     </div>
                 </div>
 
-
-
-
-            </div>
-             <div className="mt-20  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                {/* Stats Section */}
+                <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
                     {stats.map((stat, index) => (
                         <div
                             key={index}
@@ -94,20 +101,21 @@ const Update = () => {
                     ))}
                 </div>
 
-            <style jsx global>{`
-                @keyframes fade-in {
-                    from { opacity: 0; transform: translateY(-10px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
+                <style jsx global>{`
+                    @keyframes fade-in {
+                        from { opacity: 0; transform: translateY(-10px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
 
-                .animate-fade-in {
-                    animation: fade-in 0.5s ease-out forwards;
-                }
+                    .animate-fade-in {
+                        animation: fade-in 0.5s ease-out forwards;
+                    }
 
-                tr {
-                    transition: all 0.3s ease;
-                }
-            `}</style>
+                    tr {
+                        transition: all 0.3s ease;
+                    }
+                `}</style>
+            </div>
         </div>
     );
 };

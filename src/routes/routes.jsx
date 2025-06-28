@@ -63,9 +63,13 @@ export const router = createBrowserRouter([
         element: <Home></Home>
       },
       {
-        path: "/reporting",
-        element: <ReportingTool></ReportingTool>
-      },
+  path: "/reporting",
+  element: (
+    <ProtectedRoute>
+      <ReportingTool />
+    </ProtectedRoute>
+  )
+},
       {
         path: "/heatmap",
         element: <HeatMap></HeatMap>

@@ -7,7 +7,6 @@ const ManageAdmins = () => {
     {
       id: 1,
       name: 'Owner Admin',
-      email: 'owner@example.com',
       phone: '01234567890',
       role: 'owner',
       joinDate: '2023-01-01'
@@ -15,7 +14,6 @@ const ManageAdmins = () => {
     {
       id: 2,
       name: 'Admin Two',
-      email: 'admin2@example.com',
       phone: '01987654321',
       role: 'admin',
       joinDate: '2023-02-01'
@@ -23,7 +21,6 @@ const ManageAdmins = () => {
     {
       id: 3,
       name: 'Admin Three',
-      email: 'admin3@example.com',
       phone: '01555555555',
       role: 'admin',
       joinDate: '2023-03-01'
@@ -86,7 +83,6 @@ const ManageAdmins = () => {
     const adminToAdd = {
       id: admins.length + 1,
       name: newAdmin.name,
-      email: `${newAdmin.name.replace(/\s+/g, '').toLowerCase()}@example.com`,
       phone: newAdmin.phone_number,
       role: 'admin',
       joinDate: new Date().toISOString().split('T')[0],
@@ -98,7 +94,7 @@ const ManageAdmins = () => {
       password: newAdmin.password
     };
 
-    // Add to admins list (in a real app, you would send to backend here)
+    // Add to admins list
     setAdmins([...admins, adminToAdd]);
 
     // Reset form and close modal
@@ -117,7 +113,7 @@ const ManageAdmins = () => {
   };
 
   const deleteAdmin = (adminId) => {
-    if (currentAdmin?.email !== 'owner@example.com') {
+    if (currentAdmin?.role !== 'owner') {
       alert('Only owner can delete admins!');
       return;
     }
@@ -308,7 +304,6 @@ const ManageAdmins = () => {
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Join Date</th>
@@ -320,7 +315,6 @@ const ManageAdmins = () => {
                 <tr key={admin.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{admin.id}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{admin.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{admin.email}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{admin.phone}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full

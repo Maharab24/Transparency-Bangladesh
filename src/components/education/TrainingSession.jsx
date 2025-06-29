@@ -1,8 +1,18 @@
-// src/components/training/TrainingSession.jsx
+// src/components/education/TrainingSession.jsx
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaChalkboardTeacher, FaCertificate, FaBuilding, FaUserGraduate, FaClock, FaUsers, FaStar, FaRegCheckCircle, FaMedal } from 'react-icons/fa';
+import { FaChalkboardTeacher, FaCertificate, FaBuilding, FaUserGraduate, FaClock, FaUsers, FaStar, FaMedal } from 'react-icons/fa';
 import { BsFillPatchCheckFill } from 'react-icons/bs';
+
+// Import company logos
+import Grameenphone from '../../assets/images/Grameenphone.png';
+import bKash from '../../assets/images/bKash.png';
+import BRAC from '../../assets/images/Brac.png';
+import Square from '../../assets/images/Square.png';
+import ACI from '../../assets/images/ACI.jpg';
+import Unilever from '../../assets/images/Unilever.jpg';
+import Robi from '../../assets/images/Robi.png';
+import Walton from '../../assets/images/Walton.png';
 
 const TrainingSession = () => {
     useEffect(() => {
@@ -73,16 +83,16 @@ const TrainingSession = () => {
     ? courses
     : courses.filter(course => course.category === activeTab);
 
-  // Certified companies
+  // Certified companies with actual logo imports
   const certifiedCompanies = [
-    { id: 1, name: "Grameenphone", logo: "GP", year: 2023 },
-    { id: 2, name: "bKash", logo: "bK", year: 2022 },
-    { id: 3, name: "BRAC Bank", logo: "BB", year: 2023 },
-    { id: 4, name: "Square Pharmaceuticals", logo: "SP", year: 2022 },
-    { id: 5, name: "ACI Limited", logo: "ACI", year: 2023 },
-    { id: 6, name: "Unilever Bangladesh", logo: "UB", year: 2022 },
-    { id: 7, name: "Robi Axiata", logo: "RB", year: 2023 },
-    { id: 8, name: "Walton Group", logo: "WG", year: 2023 }
+    { id: 1, name: "Grameenphone", logo: Grameenphone, year: 2023 },
+    { id: 2, name: "bKash", logo: bKash, year: 2022 },
+    { id: 3, name: "BRAC Bank", logo: BRAC, year: 2023 },
+    { id: 4, name: "Square Pharmaceuticals", logo: Square, year: 2022 },
+    { id: 5, name: "ACI Limited", logo: ACI, year: 2023 },
+    { id: 6, name: "Unilever Bangladesh", logo: Unilever, year: 2022 },
+    { id: 7, name: "Robi Axiata", logo: Robi, year: 2023 },
+    { id: 8, name: "Walton Group", logo: Walton, year: 2023 }
   ];
 
   // Stats data
@@ -369,8 +379,12 @@ const TrainingSession = () => {
                   boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
                 }}
               >
-                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-[#f6824d] to-[#c6542c] flex items-center justify-center text-white font-bold text-xl mb-4">
-                  {company.logo}
+                <div className="w-20 h-20 rounded-full bg-white border-2 border-amber-300 flex items-center justify-center overflow-hidden mb-4">
+                  <img
+                    src={company.logo}
+                    alt={company.name}
+                    className="w-full h-full object-contain p-2"
+                  />
                 </div>
                 <h3 className="font-semibold text-gray-800 mb-1">{company.name}</h3>
                 <div className="flex items-center text-sm text-gray-500 mt-2">
